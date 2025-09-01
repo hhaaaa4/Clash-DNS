@@ -130,7 +130,7 @@ proxy-groups:
       - JP-负载均衡-轮询
       - US AUTO
       - US-负载均衡-轮询
-    icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
+    icon: https://img.icons8.com/?size=80&id=118633&format=png
 
   - name: Zalo
     type: select
