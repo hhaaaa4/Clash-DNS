@@ -721,6 +721,7 @@ rules:
   - PROCESS-NAME,com.twitter.android,X
   - PROCESS-NAME,com.google.android.youtube,YouTube
   - PROCESS-NAME,com.zing.zalo,Zalo
+  - DOMAIN-KEYWORD,google,Google
   - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
   - DOMAIN-SUFFIX,gstatic.com,Google
