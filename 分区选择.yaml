@@ -226,60 +226,6 @@ proxy-groups:
     include-all: false
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg
 
-  - name: Netflix
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/netflix.svg
-
-  - name: Spotify
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/spotify.svg
-
   - name: 微软服务
     type: select
     interval: 300
@@ -333,23 +279,6 @@ proxy-groups:
       - US-负载均衡-轮询
     include-all: false
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg
-
-  - name: 哔哩哔哩港澳台
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 全局直连
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg
 
   - name: HK AUTO
     type: url-test
@@ -572,9 +501,9 @@ rules:
   - PROCESS-NAME,Zalo.exe,Zalo
   - PROCESS-NAME,Zalocall.exe,Zalo
   - PROCESS-NAME,Zalocap.exe,Zalo
+  - PROCESS-NAME,Telegram.exe,Telegram
   - DOMAIN-KEYWORD,google,Google
   - DOMAIN,gemini.google,AI
-  - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
   - DOMAIN-SUFFIX,gstatic.com,Google
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,Google
@@ -586,10 +515,9 @@ rules:
   - RULE-SET,icloud,苹果服务
   - RULE-SET,apple,苹果服务
   - RULE-SET,google,Google
-  - RULE-SET,YouTube,YouTube
-  - RULE-SET,Netflix,Netflix
-  - RULE-SET,Spotify,Spotify
-  - RULE-SET,BilibiliHMT,哔哩哔哩港澳台
+  - RULE-SET,YouTube,Google
+  - RULE-SET,Netflix,节点选择
+  - RULE-SET,Spotify,节点选择
   - RULE-SET,AI,AI
   - RULE-SET,proxy,节点选择
   - RULE-SET,gfw,节点选择
@@ -724,13 +652,6 @@ rule-providers:
     behavior: classical
     url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Spotify.txt
     path: ./ruleset/xiaolin-007/Spotify.yaml
-  BilibiliHMT:
-    type: http
-    format: yaml
-    interval: 86400
-    behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/BilibiliHMT.txt
-    path: ./ruleset/xiaolin-007/BilibiliHMT.yaml
   AI:
     type: http
     format: yaml
