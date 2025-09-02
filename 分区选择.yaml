@@ -572,6 +572,7 @@ rules:
   - PROCESS-NAME,Zalo.exe,Zalo
   - PROCESS-NAME,Zalocall.exe,Zalo
   - PROCESS-NAME,Zalocap.exe,Zalo
+  - DOMAIN-KEYWORD,google,Google
   - DOMAIN,gemini.google,AI
   - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
