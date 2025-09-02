@@ -721,6 +721,7 @@ rules:
   - PROCESS-NAME,com.twitter.android,X
   - PROCESS-NAME,com.google.android.youtube,YouTube
   - PROCESS-NAME,com.zing.zalo,Zalo
+  - DOMAIN,gemini.google,AI
   - DOMAIN-KEYWORD,google,Google
   - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
@@ -731,7 +732,7 @@ rules:
   - RULE-SET,applications,全局直连
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
-  - RULE-SET,icloud,微软服务
+  - RULE-SET,icloud,苹果服务
   - RULE-SET,apple,苹果服务
   - RULE-SET,google,Google
   - RULE-SET,YouTube,YouTube
