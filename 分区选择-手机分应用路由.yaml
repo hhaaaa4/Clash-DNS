@@ -129,11 +129,21 @@ proxy-groups:
     lazy: true
     max-failed-times: 3
     hidden: false
-    include-all: true
+    include-all: false
     proxies:
       - 故障转移
-    filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
-    icon: https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Whatsapp2_colored_svg-256.png
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US AUTO
+      - US-负载均衡-轮询
 
   - name: Tiktok
     type: select
@@ -143,10 +153,21 @@ proxy-groups:
     lazy: true
     max-failed-times: 3
     hidden: false
-    include-all: true
+    include-all: false
     proxies:
       - 故障转移
-    filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US AUTO
+      - US-负载均衡-轮询
     icon: https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png
 
   - name: Telegram
