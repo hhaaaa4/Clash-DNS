@@ -107,31 +107,6 @@ proxy-groups:
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
 
-  - name: Play商店
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    include-all: false
-    proxies:
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    icon: https://img.icons8.com/?size=80&id=118633&format=png
-
   - name: Zalo
     type: select
     interval: 300
@@ -146,7 +121,7 @@ proxy-groups:
     filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
     icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
-  - name: WhatsApp
+  - name: WhatsApp&Facebook&X
     type: select
     interval: 300
     timeout: 3000
@@ -159,20 +134,6 @@ proxy-groups:
       - 故障转移
     filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
     icon: https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Whatsapp2_colored_svg-256.png
-
-  - name: Facebook
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    include-all: true
-    proxies:
-      - 故障转移
-    filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
-    icon: https://cdn1.iconfinder.com/data/icons/social-media-2285/512/Colored_Facebook3_svg-512.png
 
   - name: Tiktok
     type: select
@@ -187,56 +148,6 @@ proxy-groups:
       - 故障转移
     filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
     icon: https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png
-
-  - name: ChatGPT
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://cdn0.iconfinder.com/data/icons/chat-gpt-3/128/Chat_Gpt_generation_process_Chat_Gpt_generation_process_chatbot_chatgpt_generate_process_ai_chat_01-256.png
-
-  - name: Grok
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://cdn1.iconfinder.com/data/icons/basic-ui-element-2-2-line/512/Basic_UI_Elements_-_2.1_-_line-34-512.png
 
   - name: Telegram
     type: select
@@ -263,7 +174,7 @@ proxy-groups:
     include-all: false
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
-  - name: X
+  - name: AI
     type: select
     interval: 300
     timeout: 3000
@@ -271,7 +182,9 @@ proxy-groups:
     lazy: true
     max-failed-times: 3
     hidden: false
+    include-all: false
     proxies:
+      - 节点选择
       - 故障转移
       - HK AUTO
       - HK-负载均衡-轮询
@@ -285,8 +198,7 @@ proxy-groups:
       - JP-负载均衡-轮询
       - US AUTO
       - US-负载均衡-轮询
-    include-all: false
-    icon: https://cdn2.iconfinder.com/data/icons/boxicons-solid-vol-2/24/bxs-message-square-x-256.png
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
   - name: Google
     type: select
@@ -314,86 +226,6 @@ proxy-groups:
       - US-负载均衡-轮询
     include-all: false
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
-
-  - name: YouTube
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg
-
-  - name: Netflix
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/netflix.svg
-
-  - name: AI
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    include-all: false
-    proxies:
-      - 节点选择
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
   - name: 微软服务
     type: select
@@ -448,50 +280,6 @@ proxy-groups:
       - US-负载均衡-轮询
     include-all: false
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg
-
-  - name: 哔哩哔哩港澳台
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 全局直连
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg
-
-  - name: Spotify
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/spotify.svg
 
   - name: HK AUTO
     type: url-test
@@ -711,18 +499,18 @@ proxy-groups:
 
 
 rules:
-  - PROCESS-NAME,com.android.vending,Play商店
-  - PROCESS-NAME,com.openai.chatgpt,ChatGPT
+  - PROCESS-NAME,com.android.vending,Google
+  - PROCESS-NAME,com.openai.chatgpt,AI
   - PROCESS-NAME,com.google.android.apps.bard,AI
-  - PROCESS-NAME,ai.x.grok,Grok
+  - PROCESS-NAME,ai.x.grok,AI
   - PROCESS-NAME,com.ss.android.ugc.trill,Tiktok
-  - PROCESS-NAME,com.facebook.katana,Facebook
-  - PROCESS-NAME,com.whatsapp,WhatsApp
+  - PROCESS-NAME,com.facebook.katana,WhatsApp&Facebook&X
+  - PROCESS-NAME,com.whatsapp,WhatsApp&Facebook&X
   - PROCESS-NAME,org.telegram.group,Telegram
-  - PROCESS-NAME,com.twitter.android,X
-  - PROCESS-NAME,com.google.android.youtube,YouTube
+  - PROCESS-NAME,com.twitter.android,WhatsApp&Facebook&X
+  - PROCESS-NAME,com.google.android.youtube,Google
   - PROCESS-NAME,com.zing.zalo,Zalo
-  - DOMAIN,gemini.google,AI
+  - DOMAIN-KEYWORD,gemini,AI
   - DOMAIN-KEYWORD,google,Google
   - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
@@ -736,10 +524,9 @@ rules:
   - RULE-SET,icloud,苹果服务
   - RULE-SET,apple,苹果服务
   - RULE-SET,google,Google
-  - RULE-SET,YouTube,YouTube
-  - RULE-SET,Netflix,Netflix
-  - RULE-SET,Spotify,Spotify
-  - RULE-SET,BilibiliHMT,哔哩哔哩港澳台
+  - RULE-SET,YouTube,Google
+  - RULE-SET,Netflix,节点选择
+  - RULE-SET,Spotify,节点选择
   - RULE-SET,AI,AI
   - RULE-SET,proxy,节点选择
   - RULE-SET,gfw,节点选择
@@ -760,99 +547,85 @@ rule-providers:
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
     path: ./ruleset/loyalsoldier/reject.yaml
   icloud:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/icloud.txt
     path: ./ruleset/loyalsoldier/icloud.yaml
   apple:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/apple.txt
     path: ./ruleset/loyalsoldier/apple.yaml
   google:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
+    url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/google.yaml
     path: ./ruleset/loyalsoldier/google.yaml
   proxy:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt
     path: ./ruleset/loyalsoldier/proxy.yaml
   direct:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
     path: ./ruleset/loyalsoldier/direct.yaml
   private:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
     path: ./ruleset/loyalsoldier/private.yaml
   gfw:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt
     path: ./ruleset/loyalsoldier/gfw.yaml
   tld-not-cn:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/tld-not-cn.txt
     path: ./ruleset/loyalsoldier/tld-not-cn.yaml
   telegramcidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt
     path: ./ruleset/loyalsoldier/telegramcidr.yaml
   cncidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
     path: ./ruleset/loyalsoldier/cncidr.yaml
   lancidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt
     path: ./ruleset/loyalsoldier/lancidr.yaml
-  applications:
-    type: http
-    format: yaml
-    interval: 86400
-    behavior: classical
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
-    path: ./ruleset/loyalsoldier/applications.yaml
-  bahamut:
-    type: http
-    format: yaml
-    interval: 86400
-    behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Bahamut.txt
-    path: ./ruleset/xiaolin-007/bahamut.yaml
   YouTube:
     type: http
     format: yaml
@@ -874,13 +647,6 @@ rule-providers:
     behavior: classical
     url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Spotify.txt
     path: ./ruleset/xiaolin-007/Spotify.yaml
-  BilibiliHMT:
-    type: http
-    format: yaml
-    interval: 86400
-    behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/BilibiliHMT.txt
-    path: ./ruleset/xiaolin-007/BilibiliHMT.yaml
   AI:
     type: http
     format: yaml
