@@ -199,33 +199,6 @@ proxy-groups:
     include-all: false
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
 
-  - name: YouTube
-    type: select
-    interval: 300
-    timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
-    max-failed-times: 3
-    hidden: false
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 故障转移
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US AUTO
-      - US-负载均衡-轮询
-    include-all: false
-    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg
-
   - name: 微软服务
     type: select
     interval: 300
@@ -509,7 +482,6 @@ rules:
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,Google
   - DOMAIN-SUFFIX,github.io,节点选择
   - DOMAIN,v2rayse.com,节点选择
-  - RULE-SET,applications,全局直连
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
   - RULE-SET,icloud,苹果服务
@@ -538,92 +510,85 @@ rule-providers:
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
     path: ./ruleset/loyalsoldier/reject.yaml
   icloud:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/icloud.txt
     path: ./ruleset/loyalsoldier/icloud.yaml
   apple:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/apple.txt
     path: ./ruleset/loyalsoldier/apple.yaml
   google:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
+    url: https://github.com/v2fly/domain-list-community/raw/refs/heads/master/data/google
     path: ./ruleset/loyalsoldier/google.yaml
   proxy:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt
     path: ./ruleset/loyalsoldier/proxy.yaml
   direct:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
     path: ./ruleset/loyalsoldier/direct.yaml
   private:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
     path: ./ruleset/loyalsoldier/private.yaml
   gfw:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt
     path: ./ruleset/loyalsoldier/gfw.yaml
   tld-not-cn:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/tld-not-cn.txt
     path: ./ruleset/loyalsoldier/tld-not-cn.yaml
   telegramcidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt
     path: ./ruleset/loyalsoldier/telegramcidr.yaml
   cncidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
     path: ./ruleset/loyalsoldier/cncidr.yaml
   lancidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt
     path: ./ruleset/loyalsoldier/lancidr.yaml
-  applications:
-    type: http
-    format: yaml
-    interval: 86400
-    behavior: classical
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
-    path: ./ruleset/loyalsoldier/applications.yaml
   bahamut:
     type: http
     format: yaml
