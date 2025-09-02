@@ -500,6 +500,14 @@ proxy-groups:
 
 rules:
   - PROCESS-NAME,com.android.vending,Google
+  - PROCESS-NAME,com.google.android.gm,Google
+  - PROCESS-NAME,com.google.android.googlequicksearchbox,Google
+  - PROCESS-NAME,com.google.android.gms,Google
+  - PROCESS-NAME,com.google.android.gsf,Google
+  - PROCESS-NAME,com.google.android.tts,Google
+  - PROCESS-NAME,com.google.android.youtube,Google
+  - PROCESS-NAME,com.google.android.apps.docs,Google
+  - PROCESS-NAME,com.google.android.apps.translate,Google
   - PROCESS-NAME,com.openai.chatgpt,AI
   - PROCESS-NAME,com.google.android.apps.bard,AI
   - PROCESS-NAME,ai.x.grok,AI
@@ -508,7 +516,6 @@ rules:
   - PROCESS-NAME,com.whatsapp,WhatsApp&Facebook&X
   - PROCESS-NAME,org.telegram.group,Telegram
   - PROCESS-NAME,com.twitter.android,WhatsApp&Facebook&X
-  - PROCESS-NAME,com.google.android.youtube,Google
   - PROCESS-NAME,com.zing.zalo,Zalo
   - DOMAIN-KEYWORD,gemini,AI
   - DOMAIN-KEYWORD,google,Google
