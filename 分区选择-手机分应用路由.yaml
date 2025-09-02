@@ -525,7 +525,6 @@ rules:
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,Google
   - DOMAIN-SUFFIX,github.io,节点选择
   - DOMAIN,v2rayse.com,节点选择
-  - RULE-SET,applications,全局直连
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
   - RULE-SET,icloud,苹果服务
