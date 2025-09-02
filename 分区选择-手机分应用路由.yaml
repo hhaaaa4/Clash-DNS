@@ -713,6 +713,7 @@ proxy-groups:
 rules:
   - PROCESS-NAME,com.android.vending,Play商店
   - PROCESS-NAME,com.openai.chatgpt,ChatGPT
+  - PROCESS-NAME,com.google.android.apps.bard,AI
   - PROCESS-NAME,ai.x.grok,Grok
   - PROCESS-NAME,com.ss.android.ugc.trill,Tiktok
   - PROCESS-NAME,com.facebook.katana,Facebook
