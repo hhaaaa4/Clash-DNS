@@ -572,7 +572,7 @@ rules:
   - PROCESS-NAME,Zalo.exe,Zalo
   - PROCESS-NAME,Zalocall.exe,Zalo
   - PROCESS-NAME,Zalocap.exe,Zalo
-  - DOMAIN-KEYWORD,google,Google
+  - DOMAIN,gemini.google,AI
   - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
   - DOMAIN-SUFFIX,gstatic.com,Google
@@ -582,7 +582,7 @@ rules:
   - RULE-SET,applications,全局直连
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
-  - RULE-SET,icloud,微软服务
+  - RULE-SET,icloud,苹果服务
   - RULE-SET,apple,苹果服务
   - RULE-SET,google,Google
   - RULE-SET,YouTube,YouTube
