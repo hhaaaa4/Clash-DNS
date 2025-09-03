@@ -154,7 +154,7 @@ proxy-groups:
     lazy: true
     max-failed-times: 3
     hidden: false
-    include-all: false
+    include-all: true
     proxies:
       - 故障转移
       - HK AUTO
@@ -169,6 +169,7 @@ proxy-groups:
       - JP-负载均衡-轮询
       - US AUTO
       - US-负载均衡-轮询
+    filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
     icon: https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png
 
   - name: Telegram
@@ -193,7 +194,8 @@ proxy-groups:
       - JP-负载均衡-轮询
       - US AUTO
       - US-负载均衡-轮询
-    include-all: false
+    include-all: true
+    filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam|香港|HK|HongKong
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
   - name: AI
