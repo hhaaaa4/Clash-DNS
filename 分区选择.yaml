@@ -509,7 +509,6 @@ proxy-groups:
     include-all: true
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书|美国|US|香港|HK|HongKong|台湾|TW|新加坡|singapore|SG|日本|JP|Japan|越南|VN|vietnam)).*$
     url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
 
   - name: 广告过滤
     type: select
