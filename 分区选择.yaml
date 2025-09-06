@@ -44,401 +44,542 @@ proxy-groups:
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
     include-all: false
     proxies:
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
+      - 冷门
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg
 
   - name: 故障转移
     type: fallback
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: false
     hidden: false
     include-all: true
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
 
   - name: Zalo
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
-    include-all: true
+    include-all: false
     proxies:
       - 故障转移
-    filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam
+      - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
   - name: Telegram
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
+    include-all: false
     proxies:
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
-    include-all: true
-    filter: (?i)新加坡|SG|Singapore|越南|VN|vietnam|香港|HK|HongKong
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
   - name: AI
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
     include-all: false
     proxies:
-      - 节点选择
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
   - name: Google
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
+    include-all: false
     proxies:
-      - 节点选择
-      - 全局直连
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
-    include-all: false
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
 
   - name: 微软服务
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
+    include-all: false
     proxies:
-      - 节点选择
-      - 全局直连
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
-    include-all: false
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg
 
   - name: 苹果服务
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
+    include-all: false
     proxies:
-      - 节点选择
-      - 全局直连
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
-    include-all: false
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg
 
-  - name: HK AUTO
-    type: url-test
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-    include-all: true
-    filter: (?i)香港|Hong Kong|HK|🇭🇰
+  - name: HK
+    type: select
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
-
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: (?i)香港|Hong Kong|HK|🇭🇰
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
+    
+  - name: HK AUTO
+    type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)香港|Hong Kong|HK|🇭🇰
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
+    
   - name: HK-负载均衡-轮询
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-    include-all: true
-    filter: (?i)香港|Hong Kong|HK|🇭🇰
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)香港|Hong Kong|HK|🇭🇰
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
+
+  - name: TW
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: (?i)台|tw|TW
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
 
   - name: TW AUTO
     type: url-test
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-    include-all: true
-    filter: (?i)台|tw|TW
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)台|tw|TW
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
 
   - name: TW-负载均衡-轮询
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-    include-all: true
-    filter: (?i)台|tw|TW
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)台|tw|TW
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
+
+  - name: SG
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: (?i)新加坡|Singapore|🇸🇬
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
 
   - name: SG AUTO
     type: url-test
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-    include-all: true
-    filter: (?i)新加坡|Singapore|🇸🇬
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)新加坡|Singapore|🇸🇬
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
 
   - name: SG-负载均衡-轮询
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-    include-all: true
-    filter: (?i)新加坡|Singapore|🇸🇬
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)新加坡|Singapore|🇸🇬
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
+
+  - name: VN
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: (?i)越南|vietnam|VN|vn
+    url: https://www.google.com/generate_204
+    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
 
   - name: VN AUTO
     type: url-test
-    url: https://www.google.com/generate_204
-    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-    include-all: true
-    filter: (?i)越南|vietnam|VN|vn
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)越南|vietnam|VN|vn
+    url: https://www.google.com/generate_204
+    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
 
   - name: VN-负载均衡-轮询
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com/generate_204
-    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-    include-all: true
-    filter: (?i)越南|vietnam|VN|vn
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)越南|vietnam|VN|vn
+    url: https://www.google.com/generate_204
+    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
+
+  - name: JP
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: (?i)日本|Japan|🇯🇵
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
 
   - name: JP AUTO
     type: url-test
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-    include-all: true
-    filter: (?i)日本|Japan|🇯🇵
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)日本|Japan|🇯🇵
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
 
   - name: JP-负载均衡-轮询
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-    include-all: true
-    filter: (?i)日本|Japan|🇯🇵
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)日本|Japan|🇯🇵
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
+
+  - name: US
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: (?i)美国|USA|🇺🇸
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
 
   - name: US AUTO
     type: url-test
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
-    include-all: true
-    filter: (?i)美国|USA|🇺🇸
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)美国|USA|🇺🇸
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
 
   - name: US-负载均衡-轮询
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
-    include-all: true
-    filter: (?i)美国|USA|🇺🇸
     interval: 300
     timeout: 3000
-    hidden: true
-    lazy: false
     max-failed-times: 3
+    lazy: false
+    hidden: true
+    include-all: true
+    filter: (?i)美国|USA|🇺🇸
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
+
+  - name: 冷门
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: true
+    filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书|美国|US|香港|HK|HongKong|台湾|TW|新加坡|singapore|SG|日本|JP|Japan|越南|VN|vietnam)).*$
+    url: https://www.google.com/generate_204
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
 
   - name: 广告过滤
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
     proxies:
       - REJECT
       - DIRECT
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg
 
   - name: 全局直连
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
+    include-all: false
     proxies:
       - DIRECT
-    include-all: false
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg
 
   - name: 全局拦截
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
     proxies:
       - REJECT
       - DIRECT
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg
 
   - name: 漏网之鱼
     type: select
     interval: 300
     timeout: 3000
-    url: https://www.google.com/generate_204
-    lazy: true
     max-failed-times: 3
+    lazy: true
     hidden: false
+    include-all: false
     proxies:
-      - 节点选择
-      - 全局直连
       - 故障转移
+      - HK
       - HK AUTO
       - HK-负载均衡-轮询
+      - TW
       - TW AUTO
       - TW-负载均衡-轮询
+      - SG
       - SG AUTO
       - SG-负载均衡-轮询
+      - VN
       - VN AUTO
       - VN-负载均衡-轮询
+      - JP
       - JP AUTO
       - JP-负载均衡-轮询
+      - US
       - US AUTO
       - US-负载均衡-轮询
-    include-all: false
+      - 冷门
+    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg
 
 
