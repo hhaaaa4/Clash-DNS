@@ -157,7 +157,7 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     hidden: false
-    include-all: false
+    include-all: true
     proxies:
       - 故障转移
       - TW
