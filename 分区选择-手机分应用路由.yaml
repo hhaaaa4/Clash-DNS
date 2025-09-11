@@ -677,11 +677,11 @@ rules:
   - RULE-SET,reject,广告过滤
   - RULE-SET,icloud,苹果服务
   - RULE-SET,apple,苹果服务
+  - RULE-SET,AI,AI
   - RULE-SET,google,Google
   - RULE-SET,YouTube,Google
   - RULE-SET,Netflix,节点选择
   - RULE-SET,Spotify,节点选择
-  - RULE-SET,AI,AI
   - RULE-SET,proxy,节点选择
   - RULE-SET,gfw,节点选择
   - RULE-SET,tld-not-cn,节点选择
