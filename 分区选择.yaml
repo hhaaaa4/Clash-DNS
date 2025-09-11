@@ -176,7 +176,7 @@ proxy-groups:
       - US AUTO
       - US-负载均衡-轮询
       - 冷门
-    filter: (?i)ChatGPT|Claude|Gemini|Grok
+    filter: (?i)chatgpt|claude|gemini|grok
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
