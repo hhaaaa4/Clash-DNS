@@ -116,7 +116,7 @@ proxy-groups:
       - US AUTO
       - US-负载均衡-轮询
       - 冷门
-    url: https://www.speedtest.vn
+    url: https://www.google.com/generate_204
     icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
   - name: WhatsApp&Facebook&X
