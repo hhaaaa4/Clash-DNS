@@ -115,7 +115,7 @@ proxy-groups:
       - US AUTO
       - US-负载均衡-轮询
       - 冷门
-    url: https://www.google.com/generate_204
+    url: https://www.speedtest.vn
     icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
   - name: Telegram
@@ -534,7 +534,7 @@ proxy-groups:
     include-all: false
     proxies:
       - DIRECT
-    url: https://www.google.com/generate_204
+    url: https://www.baidu.com
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg
 
   - name: 全局拦截
