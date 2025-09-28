@@ -661,12 +661,13 @@ rules:
   - PROCESS-NAME,com.ss.android.ugc.trill,Tiktok
   - PROCESS-NAME,com.zhiliaoapp.musically,Tiktok
   - PROCESS-NAME,com.rezvorck.tiktokplugin,Tiktok
-  - PROCESS-NAME,com.facebook.katana,WhatsApp&Facebook&X
-  - PROCESS-NAME,com.whatsapp,WhatsApp&Facebook&X
+  - PROCESS-NAME,com.facebook.katana,W&F&X
+  - PROCESS-NAME,com.whatsapp,W&F&X
   - PROCESS-NAME,org.telegram.group,Telegram
-  - PROCESS-NAME,com.twitter.android,WhatsApp&Facebook&X
+  - PROCESS-NAME,com.twitter.android,W&F&X
   - PROCESS-NAME,com.zing.zalo,Zalo
   - PROCESS-NAME,vn.com.vng.zalopay,Zalo
+  - DOMAIN-KEYWORD,tiktok,Tiktok
   - DOMAIN-KEYWORD,gemini,AI
   - DOMAIN-KEYWORD,google,Google
   - DOMAIN-SUFFIX,google.com,Google
