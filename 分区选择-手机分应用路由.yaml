@@ -86,7 +86,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
     
-  - name: Zalo
+  - name: 越南APP
     type: select
     interval: 300
     timeout: 3000
@@ -665,9 +665,10 @@ rules:
   - PROCESS-NAME,com.whatsapp,W&F&X
   - PROCESS-NAME,org.telegram.group,Telegram
   - PROCESS-NAME,com.twitter.android,W&F&X
-  - PROCESS-NAME,com.zing.zalo,Zalo
-  - PROCESS-NAME,vn.com.vng.zalopay,Zalo
-  - PROCESS-NAME,com.grabtaxi.passenger,Zalo
+  - PROCESS-NAME,com.zing.zalo,越南APP
+  - PROCESS-NAME,vn.com.vng.zalopay,越南APP
+  - PROCESS-NAME,com.grabtaxi.passenger,越南APP
+  - PROCESS-NAME,com.shopee.vn,越南APP
   - DOMAIN-KEYWORD,tiktok,Tiktok
   - DOMAIN-KEYWORD,gemini,AI
   - DOMAIN-KEYWORD,google,Google
