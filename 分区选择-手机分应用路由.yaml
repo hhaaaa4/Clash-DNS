@@ -667,6 +667,7 @@ rules:
   - PROCESS-NAME,com.twitter.android,W&F&X
   - PROCESS-NAME,com.zing.zalo,Zalo
   - PROCESS-NAME,vn.com.vng.zalopay,Zalo
+  - PROCESS-NAME,com.grabtaxi.passenger,Zalo
   - DOMAIN-KEYWORD,tiktok,Tiktok
   - DOMAIN-KEYWORD,gemini,AI
   - DOMAIN-KEYWORD,google,Google
