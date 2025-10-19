@@ -50,6 +50,7 @@ proxy-groups:
     include-all: false
     proxies:
       - 故障转移
+      - 全局直连
       - HK
       - HK AUTO
       - HK-负载均衡-轮询
@@ -128,6 +129,7 @@ proxy-groups:
     include-all: false
     proxies:
       - 故障转移
+      - 全局直连
       - HK
       - HK AUTO
       - HK-负载均衡-轮询
@@ -160,6 +162,7 @@ proxy-groups:
     include-all: true
     proxies:
       - 故障转移
+      - 全局直连
       - TW
       - TW AUTO
       - TW-负载均衡-轮询
@@ -190,6 +193,7 @@ proxy-groups:
     include-all: false
     proxies:
       - 故障转移
+      - 全局直连
       - HK
       - HK AUTO
       - HK-负载均衡-轮询
@@ -560,6 +564,7 @@ proxy-groups:
     include-all: false
     proxies:
       - 故障转移
+      - 全局直连
       - HK
       - HK AUTO
       - HK-负载均衡-轮询
