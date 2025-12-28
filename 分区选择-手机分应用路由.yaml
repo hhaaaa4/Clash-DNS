@@ -901,7 +901,27 @@ rule-providers:
     behavior: classical
     url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.txt
     path: ./ruleset/xiaolin-007/AI.yaml
-    
+  Steam:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: classical
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Steam.txt
+    path: ./ruleset/xiaolin-007/Steam.yaml
+  Steam-Download:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: classical
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Steam-Download.txt
+    path: ./ruleset/xiaolin-007/Steam-Download.yaml 
+  Steam-Network:
+    type: http
+    format: yaml
+    interval: 86400
+    behavior: classical
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Steam-Network.txt
+    path: ./ruleset/xiaolin-007/Steam-Network.yaml
 
 ipv6: true
 unified-delay: true
