@@ -660,8 +660,14 @@ rules:
   - RULE-SET,Steam-Download,全局直连
   - RULE-SET,Steam-Network,Steam
   - RULE-SET,Steam,Steam
-  - DOMAIN-KEYWORD,epicgames,Epic
+  - DOMAIN-KEYWORD,steam,Steam
   - DOMAIN-KEYWORD,epic,Epic
+  # 匹配虚幻引擎域名 (Epic商店后台强依赖此域名)
+  - DOMAIN-SUFFIX,unrealengine.com,Epic
+  # 匹配 Epic 的帮助中心
+  - DOMAIN-SUFFIX,helpshift.com,Epic
+  # 匹配 Epic 在线服务
+  - DOMAIN-SUFFIX,eos-v2.org,Epic
   - PROCESS-NAME,Zalo.exe,Zalo
   - PROCESS-NAME,Zalocall.exe,Zalo
   - PROCESS-NAME,Zalocap.exe,Zalo
