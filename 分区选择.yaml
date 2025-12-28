@@ -218,7 +218,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
 
-  - name: 游戏平台
+  - name: Steam
     type: select
     interval: 300
     timeout: 3000
@@ -227,7 +227,6 @@ proxy-groups:
     hidden: false
     include-all: false
     proxies:
-      - 节点选择
       - 故障转移
       - 全局直连
       - HK
@@ -250,7 +249,40 @@ proxy-groups:
       - US-负载均衡-轮询
       - 冷门
     url: https://www.google.com/generate_204
-    icon: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/Steam.svg
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg
+
+  - name: Epic
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: false
+    proxies:
+      - 故障转移
+      - 全局直连
+      - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
+    url: https://www.google.com/generate_204
+    icon: https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000
     
   - name: 微软服务
     type: select
@@ -626,22 +658,10 @@ proxy-groups:
 
 rules:
   - RULE-SET,Steam-Download,全局直连
-  - RULE-SET,Steam-Network,游戏平台
-  - RULE-SET,Steam,游戏平台
-  - DOMAIN-KEYWORD,epicgames,游戏平台
-  - DOMAIN-KEYWORD,epic,游戏平台
-  - DOMAIN-KEYWORD,blizzard,游戏平台
-  - DOMAIN-KEYWORD,battle,游戏平台
-  - DOMAIN-KEYWORD,origin,游戏平台
-  - DOMAIN-KEYWORD,ea,游戏平台
-  - DOMAIN-KEYWORD,ubisoft,游戏平台
-  - DOMAIN-KEYWORD,uplay,游戏平台
-  - DOMAIN-KEYWORD,xbox,游戏平台
-  - DOMAIN-KEYWORD,playstation,游戏平台
-  - DOMAIN-KEYWORD,sony,游戏平台
-  - DOMAIN-KEYWORD,nintendo,游戏平台
-  - DOMAIN-KEYWORD,roblox,游戏平台
-  - DOMAIN-KEYWORD,discord,游戏平台
+  - RULE-SET,Steam-Network,Steam
+  - RULE-SET,Steam,Steam
+  - DOMAIN-KEYWORD,epicgames,Epic
+  - DOMAIN-KEYWORD,epic,Epic
   - PROCESS-NAME,Zalo.exe,Zalo
   - PROCESS-NAME,Zalocall.exe,Zalo
   - PROCESS-NAME,Zalocap.exe,Zalo
