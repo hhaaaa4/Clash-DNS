@@ -624,7 +624,6 @@ proxy-groups:
 
 
 rules:
-# --- Steam & 游戏平台规则 ---
   - RULE-SET,Steam-Download,全局直连
   - RULE-SET,Steam-Network,游戏平台
   - RULE-SET,Steam,游戏平台
@@ -789,7 +788,7 @@ rule-providers:
     behavior: classical
     url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.txt
     path: ./ruleset/xiaolin-007/AI.yaml
-Steam:
+  Steam:
     type: http
     format: yaml
     interval: 86400
