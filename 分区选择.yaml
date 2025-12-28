@@ -225,6 +225,7 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     hidden: false
+    include-all: false
     proxies:
       - 节点选择
       - 故障转移
