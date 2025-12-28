@@ -216,6 +216,72 @@ proxy-groups:
     url: https://www.google.com/generate_204
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
+  - name: Steam
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: false
+    proxies:
+      - 故障转移
+      - 全局直连
+      - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
+    url: https://www.google.com/generate_204
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg
+
+  - name: Epic
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: false
+    proxies:
+      - 故障转移
+      - 全局直连
+      - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
+    url: https://www.google.com/generate_204
+    icon: https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000
+
   - name: AI
     type: select
     interval: 300
@@ -653,6 +719,20 @@ proxy-groups:
 
 
 rules:
+  - RULE-SET,Steam-Download,全局直连
+  - PROCESS-NAME,com.valvesoftware.android.steam.community,Steam
+  - RULE-SET,Steam-Network,Steam
+  - RULE-SET,Steam,Steam
+# --- Epic (改为关键词匹配) ---
+  - PROCESS-NAME,com.epicgames.portal,Epic
+  # 匹配包含 epicgames 的域名 (如 store.epicgames.com)
+  - DOMAIN-KEYWORD,epicgames,Epic
+  # 匹配虚幻引擎域名 (Epic商店后台强依赖此域名)
+  - DOMAIN-SUFFIX,unrealengine.com,Epic
+  # 匹配 Epic 的帮助中心
+  - DOMAIN-SUFFIX,helpshift.com,Epic
+  # 匹配 Epic 在线服务
+  - DOMAIN-SUFFIX,eos-v2.org,Epic
   - PROCESS-NAME,com.android.vending,Google
   - PROCESS-NAME,com.google.android.apps.maps,Google
   - PROCESS-NAME,com.google.android.gm,Google
