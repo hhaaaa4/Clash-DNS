@@ -903,7 +903,13 @@ ipv6: false
 unified-delay: true
 tcp-concurrent: true
 tun:
+  enable: true              # 开启 Tun 模式
+  stack: mixed              # 【已修改】这里改成了 mixed (混合模式)
   mtu: 1500
+  dns-hijack:
+    - any:53                # 必须保留，防止 DNS 泄露
+  auto-route: true          # 自动路由，必须开启
+  auto-detect-interface: true # 自动检测网卡，建议开启
 
 
 sniffer:
