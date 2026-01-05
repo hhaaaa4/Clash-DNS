@@ -12,7 +12,7 @@ function main(config) {
   // 2. Tun 模式设置
   config['tun'] = {
     "enable": true,
-    "stack": "system", // 或 gvisor，视系统而定
+    "stack": "mixed",
     "mtu": 1500,
     "dns-hijack": [
       "any:53"
