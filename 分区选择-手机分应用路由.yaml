@@ -1,6 +1,6 @@
 dns:
   enable: true
-  ipv6: true
+  ipv6: flash
   listen: 0.0.0.0:1053
   default-nameserver:
     - 223.5.5.5
@@ -899,7 +899,7 @@ rule-providers:
     path: ./ruleset/xiaolin-007/AI.yaml
 
 
-ipv6: true
+ipv6: flash
 unified-delay: true
 tcp-concurrent: true
 tun:
