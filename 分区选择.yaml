@@ -1,6 +1,6 @@
 dns:
   enable: true
-  ipv6: false  # 【已修正】必须是 false
+  ipv6: false  # 【已确认】关闭 IPv6
   listen: 0.0.0.0:1053
   default-nameserver:
     - 223.5.5.5
@@ -40,9 +40,99 @@ dns:
     - https://223.5.5.5/dns-query
     - https://doh.pub/dns-query
 
+# 【已补全】Tun 混合模式配置
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+tun:
+  enable: true
+  stack: mixed  # 混合模式
+  mtu: 1500
+  dns-hijack:
+    - any:53
+  auto-route: true
+  auto-detect-interface: true
+
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  force-dns-mapping: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports:
+        - 80
+        - 443
+      override-destination: false
+    TLS:
+      ports:
+        - 443
+  skip-domain:
+    - +.push.apple.com
+  skip-dst-address:
+    - 91.105.192.0/23
+    - 91.108.4.0/22
+    - 91.108.8.0/21
+    - 91.108.16.0/21
+    - 91.108.56.0/22
+    - 95.161.64.0/20
+    - 149.154.160.0/20
+    - 185.76.151.0/24
+    - 2001:67c:4e8::/48
+    - 2001:b28:f23c::/47
+    - 2001:b28:f23f::/48
+    - 2a0a:f280:203::/48
+
 proxy-groups:
   - name: 节点选择
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    proxies:
+      - 故障转移
+      - 全局直连
+      - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
+      - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
+      - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
+      - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
+    filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
+    url: https://www.google.com/generate_204
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg
+
+  - name: 故障转移
+    type: fallback
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    include-all: true
+    filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
+    url: https://www.google.com/generate_204
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
+
+  - name: 越南APP
+    type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
@@ -66,164 +156,288 @@ proxy-groups:
       - US-负载均衡-轮询
       - 冷门
     url: https://www.google.com/generate_204
-    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg
+    icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
-  - name: 故障转移
-    type: fallback
-    proxies:
-      - HK
-      - TW
-      - SG
-      - VN
-      - JP
-      - US
-    url: https://www.google.com/generate_204
-    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
-
-  # 【已修正】名称改为 "越南APP" 以匹配规则，防止报错
-  - name: 越南APP
+  - name: W&F&X
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
+      - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
+      - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
       - VN AUTO
       - VN-负载均衡-轮询
-      - HK
-      - SG
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
-    icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
-  # 【已补全】缺失的 Tiktok 组
   - name: Tiktok
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png
 
-  # 【已补全】缺失的 W&F&X 组
-  - name: W&F&X
-    type: select
-    proxies:
-      - 故障转移
-      - 全局直连
-      - HK
-      - TW
-      - SG
-      - VN
-      - JP
-      - US
-    url: https://www.google.com/generate_204
-
   - name: Telegram
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
   - name: Steam
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg
 
   - name: Epic
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000
 
   - name: AI
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    include-all: true
     proxies:
       - 故障转移
       - 全局直连
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     filter: (?i)chatgpt|claude|gemini|grok
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
   - name: Google
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
 
   - name: 微软服务
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg
 
   - name: 苹果服务
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg
 
   - name: HK
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
     include-all: true
     filter: (?i)香港|Hong Kong|HK|🇭🇰
     url: https://www.google.com/generate_204
@@ -231,24 +445,36 @@ proxy-groups:
     
   - name: HK AUTO
     type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)香港|Hong Kong|HK|🇭🇰
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-    interval: 300
-    tolerance: 50
-
+    
   - name: HK-负载均衡-轮询
     type: load-balance
     strategy: round-robin
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)香港|Hong Kong|HK|🇭🇰
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-    interval: 300
 
   - name: TW
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     include-all: true
     filter: (?i)台|tw|TW
     url: https://www.google.com/generate_204
@@ -256,24 +482,36 @@ proxy-groups:
 
   - name: TW AUTO
     type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)台|tw|TW
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-    interval: 300
-    tolerance: 50
 
   - name: TW-负载均衡-轮询
     type: load-balance
     strategy: round-robin
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)台|tw|TW
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-    interval: 300
 
   - name: SG
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     include-all: true
     filter: (?i)新加坡|Singapore|🇸🇬
     url: https://www.google.com/generate_204
@@ -281,24 +519,36 @@ proxy-groups:
 
   - name: SG AUTO
     type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)新加坡|Singapore|🇸🇬
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-    interval: 300
-    tolerance: 50
 
   - name: SG-负载均衡-轮询
     type: load-balance
     strategy: round-robin
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)新加坡|Singapore|🇸🇬
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-    interval: 300
 
   - name: VN
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     include-all: true
     filter: (?i)越南|vietnam|VN|vn
     url: https://www.google.com/generate_204
@@ -306,24 +556,36 @@ proxy-groups:
 
   - name: VN AUTO
     type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)越南|vietnam|VN|vn
     url: https://www.google.com/generate_204
     icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-    interval: 300
-    tolerance: 50
 
   - name: VN-负载均衡-轮询
     type: load-balance
     strategy: round-robin
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)越南|vietnam|VN|vn
     url: https://www.google.com/generate_204
     icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-    interval: 300
 
   - name: JP
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     include-all: true
     filter: (?i)日本|Japan|🇯🇵
     url: https://www.google.com/generate_204
@@ -331,24 +593,36 @@ proxy-groups:
 
   - name: JP AUTO
     type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)日本|Japan|🇯🇵
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-    interval: 300
-    tolerance: 50
 
   - name: JP-负载均衡-轮询
     type: load-balance
     strategy: round-robin
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)日本|Japan|🇯🇵
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-    interval: 300
 
   - name: US
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     include-all: true
     filter: (?i)美国|USA|🇺🇸
     url: https://www.google.com/generate_204
@@ -356,30 +630,47 @@ proxy-groups:
 
   - name: US AUTO
     type: url-test
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)美国|USA|🇺🇸
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
-    interval: 300
-    tolerance: 50
 
   - name: US-负载均衡-轮询
     type: load-balance
     strategy: round-robin
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: false
+    hidden: true
     include-all: true
     filter: (?i)美国|USA|🇺🇸
     url: https://www.google.com/generate_204
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
-    interval: 300
 
   - name: 冷门
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     include-all: true
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书|美国|US|香港|HK|HongKong|台湾|TW|新加坡|singapore|SG|日本|JP|Japan|越南|VN|vietnam)).*$
     url: https://www.google.com/generate_204
 
   - name: 广告过滤
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     proxies:
       - REJECT
       - DIRECT
@@ -388,6 +679,12 @@ proxy-groups:
 
   - name: 全局直连
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: false
     proxies:
       - DIRECT
     url: https://www.baidu.com
@@ -395,6 +692,11 @@ proxy-groups:
 
   - name: 全局拦截
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
     proxies:
       - REJECT
       - DIRECT
@@ -403,44 +705,78 @@ proxy-groups:
 
   - name: 漏网之鱼
     type: select
+    interval: 300
+    timeout: 3000
+    max-failed-times: 3
+    lazy: true
+    hidden: false
+    include-all: false
     proxies:
       - 故障转移
       - 全局直连
       - HK
+      - HK AUTO
+      - HK-负载均衡-轮询
       - TW
+      - TW AUTO
+      - TW-负载均衡-轮询
       - SG
+      - SG AUTO
+      - SG-负载均衡-轮询
       - VN
+      - VN AUTO
+      - VN-负载均衡-轮询
       - JP
+      - JP AUTO
+      - JP-负载均衡-轮询
       - US
+      - US AUTO
+      - US-负载均衡-轮询
+      - 冷门
     url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg
 
 rules:
+  - PROCESS-NAME,com.valvesoftware.android.steam.community,Steam
   - DOMAIN-KEYWORD,steam,Steam
+  - PROCESS-NAME,com.epicgames.portal,Epic
   - DOMAIN-KEYWORD,epic,Epic
   - DOMAIN-SUFFIX,unrealengine.com,Epic
   - DOMAIN-SUFFIX,helpshift.com,Epic
   - DOMAIN-SUFFIX,eos-v2.org,Epic
-  - PROCESS-NAME,Zalo.exe,越南APP
-  - PROCESS-NAME,Zalocall.exe,越南APP
-  - PROCESS-NAME,Zalocap.exe,越南APP
+  - PROCESS-NAME,com.android.vending,Google
+  - PROCESS-NAME,com.google.android.apps.maps,Google
+  - PROCESS-NAME,com.google.android.gm,Google
+  - PROCESS-NAME,com.google.android.googlequicksearchbox,Google
+  - PROCESS-NAME,com.google.android.gms,Google
+  - PROCESS-NAME,com.google.android.gsf,Google
+  - PROCESS-NAME,com.google.android.tts,Google
+  - PROCESS-NAME,com.google.android.youtube,Google
+  - PROCESS-NAME,com.google.android.apps.docs,Google
+  - PROCESS-NAME,com.google.android.apps.translate,Google
+  - PROCESS-NAME,com.openai.chatgpt,AI
+  - PROCESS-NAME,com.google.android.apps.bard,AI
+  - PROCESS-NAME,ai.x.grok,AI
+  - PROCESS-NAME,com.ss.android.ugc.trill,Tiktok
+  - PROCESS-NAME,com.zhiliaoapp.musically,Tiktok
+  - PROCESS-NAME,com.rezvorck.tiktokplugin,Tiktok
+  - PROCESS-NAME,com.facebook.katana,W&F&X
+  - PROCESS-NAME,com.whatsapp,W&F&X
+  - PROCESS-NAME,org.telegram.group,Telegram
+  - PROCESS-NAME,com.twitter.android,W&F&X
   - PROCESS-NAME,com.zing.zalo,越南APP
   - PROCESS-NAME,vn.com.vng.zalopay,越南APP
+  - PROCESS-NAME,com.grabtaxi.passenger,越南APP
+  - PROCESS-NAME,com.shopee.vn,越南APP
+  - DOMAIN-KEYWORD,tiktok,Tiktok
   - DOMAIN-KEYWORD,gemini,AI
-  - PROCESS-NAME,Telegram.exe,Telegram
   - DOMAIN-KEYWORD,google,Google
-  - DOMAIN-SUFFIX,sheerid.com,Google
+  - DOMAIN-SUFFIX,google.com,Google
   - DOMAIN-SUFFIX,googleapis.cn,Google
   - DOMAIN-SUFFIX,gstatic.com,Google
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,Google
   - DOMAIN-SUFFIX,github.io,节点选择
   - DOMAIN,v2rayse.com,节点选择
-  - PROCESS-NAME,com.ss.android.ugc.trill,Tiktok
-  - PROCESS-NAME,com.zhiliaoapp.musically,Tiktok
-  - DOMAIN-KEYWORD,tiktok,Tiktok
-  - PROCESS-NAME,com.facebook.katana,W&F&X
-  - PROCESS-NAME,com.whatsapp,W&F&X
-  - PROCESS-NAME,com.twitter.android,W&F&X
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
   - RULE-SET,icloud,苹果服务
@@ -575,50 +911,6 @@ rule-providers:
     behavior: classical
     url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.txt
     path: ./ruleset/xiaolin-007/AI.yaml
-
-ipv6: false
-unified-delay: true
-tcp-concurrent: true
-
-# 【已补全】完整的混合模式 Tun 配置
-tun:
-  enable: true
-  stack: mixed
-  mtu: 1500
-  dns-hijack:
-    - any:53
-  auto-route: true
-  auto-detect-interface: true
-
-sniffer:
-  enable: true
-  parse-pure-ip: true
-  force-dns-mapping: true
-  override-destination: false
-  sniff:
-    HTTP:
-      ports:
-        - 80
-        - 443
-      override-destination: false
-    TLS:
-      ports:
-        - 443
-  skip-domain:
-    - +.push.apple.com
-  skip-dst-address:
-    - 91.105.192.0/23
-    - 91.108.4.0/22
-    - 91.108.8.0/21
-    - 91.108.16.0/21
-    - 91.108.56.0/22
-    - 95.161.64.0/20
-    - 149.154.160.0/20
-    - 185.76.151.0/24
-    - 2001:67c:4e8::/48
-    - 2001:b28:f23c::/47
-    - 2001:b28:f23f::/48
-    - 2a0a:f280:203::/48
 
 profile:
   store-selected: true
