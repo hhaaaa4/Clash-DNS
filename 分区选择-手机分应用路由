@@ -1,30 +1,63 @@
-// Clash Verge Rev / Mihomo Script
-// 转换自用户提供的 YAML 配置
+// Clash Verge / Mihomo 脚本配置
+// 该脚本将覆盖默认配置以匹配您提供的 YAML 设定
 
 function main(config) {
-  
-  // 1. 基础设置
-  config['ipv6'] = false;
+  // 1. 基础设置与内核选项
   config['unified-delay'] = true;
   config['tcp-concurrent'] = true;
-  config['log-level'] = 'info';
-  
-  // 2. Tun 模式设置
-  config['tun'] = {
+  config['geo-auto-update'] = true;
+  config['geo-update-interval'] = 3;
+  config['geodata-mode'] = false;
+
+  config['geox-url'] = {
+    "geoip": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat",
+    "geosite": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
+    "mmdb": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
+    "asn": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+  };
+
+  config.profile = {
+    "store-selected": true,
+    "store-fake-ip": true
+  };
+
+  // 2. TUN 模式设置
+  config.tun = {
     "enable": true,
     "stack": "mixed",
     "mtu": 1500,
-    "dns-hijack": [
-      "any:53"
-    ],
+    "dns-hijack": ["any:53"],
     "auto-route": true,
     "auto-detect-interface": true
   };
 
-  // 3. DNS 设置
-  config['dns'] = {
+  // 3. Sniffer (嗅探) 设置
+  config.sniffer = {
     "enable": true,
-    "ipv6": false,
+    "parse-pure-ip": true,
+    "force-dns-mapping": true,
+    "override-destination": false,
+    "sniff": {
+      "HTTP": {
+        "ports": [80, 443],
+        "override-destination": false
+      },
+      "TLS": {
+        "ports": [443]
+      }
+    },
+    "skip-domain": ["+.push.apple.com"],
+    "skip-dst-address": [
+      "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/21", 
+      "91.108.16.0/21", "91.108.56.0/22", "95.161.64.0/20", 
+      "149.154.160.0/20", "185.76.151.0/24", "2001:67c:4e8::/48", 
+      "2001:b28:f23c::/47", "2001:b28:f23f::/48", "2a0a:f280:203::/48"
+    ]
+  };
+
+  // 4. DNS 设置
+  config.dns = {
+    "enable": true,
     "listen": "0.0.0.0:1053",
     "default-nameserver": [
       "223.5.5.5",
@@ -61,7 +94,6 @@ function main(config) {
       "https://1.1.1.1/dns-query",
       "https://8.8.8.8/dns-query"
     ],
-    "prefer-h3": false,
     "respect-rules": true,
     "use-system-hosts": false,
     "cache-algorithm": "arc",
@@ -71,171 +103,214 @@ function main(config) {
     ]
   };
 
-  // 4. Sniffer (嗅探) 设置
-  config['sniffer'] = {
-    "enable": true,
-    "parse-pure-ip": true,
-    "force-dns-mapping": true,
-    "override-destination": false,
-    "sniff": {
-      "HTTP": {
-        "ports": [80, 443],
-        "override-destination": false
-      },
-      "TLS": {
-        "ports": [443]
-      }
-    },
-    "skip-domain": [
-      "+.push.apple.com"
-    ],
-    "skip-dst-address": [
-      "91.105.192.0/23",
-      "91.108.4.0/22",
-      "91.108.8.0/21",
-      "91.108.16.0/21",
-      "91.108.56.0/22",
-      "95.161.64.0/20",
-      "149.154.160.0/20",
-      "185.76.151.0/24",
-      "2001:67c:4e8::/48",
-      "2001:b28:f23c::/47",
-      "2001:b28:f23f::/48",
-      "2a0a:f280:203::/48"
-    ]
-  };
+  // 5. 代理组 (Proxy Groups)
+  // 定义通用代理列表以便复用
+  const standardProxies = [
+    "故障转移", "全局直连", 
+    "HK", "HK AUTO", "HK-负载均衡-轮询",
+    "TW", "TW AUTO", "TW-负载均衡-轮询",
+    "SG", "SG AUTO", "SG-负载均衡-轮询",
+    "VN", "VN AUTO", "VN-负载均衡-轮询",
+    "JP", "JP AUTO", "JP-负载均衡-轮询",
+    "US", "US AUTO", "US-负载均衡-轮询",
+    "冷门"
+  ];
 
-  // 5. GeoX 资源地址
-  config['geo-auto-update'] = true;
-  config['geo-update-interval'] = 3;
-  config['geodata-mode'] = false;
-  config['geox-url'] = {
-    "geoip": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat",
-    "geosite": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
-    "mmdb": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
-    "asn": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
-  };
-
-  // 6. 代理组 (Proxy Groups)
-  // 注意：这里定义了组结构，具体的节点会根据 filter 从订阅中抓取
   config['proxy-groups'] = [
     {
       "name": "节点选择",
       "type": "select",
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
       "include-all": false,
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "proxies": standardProxies,
       "filter": "^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
     },
     {
       "name": "故障转移",
       "type": "fallback",
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": false,
+      "hidden": false,
       "include-all": true,
       "filter": "^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg"
     },
     {
       "name": "越南APP",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
     },
     {
       "name": "W&F&X",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
-      "url": "https://www.google.com/generate_204",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
+      "url": "https://www.google.com/generate_204"
     },
     {
       "name": "Tiktok",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      // Tiktok 组通常需要剔除 HK，这里根据原配置保留了原样
+      "proxies": [
+        "故障转移", "全局直连",
+        "TW", "TW AUTO", "TW-负载均衡-轮询",
+        "SG", "SG AUTO", "SG-负载均衡-轮询",
+        "VN", "VN AUTO", "VN-负载均衡-轮询",
+        "JP", "JP AUTO", "JP-负载均衡-轮询",
+        "US", "US AUTO", "US-负载均衡-轮询",
+        "冷门"
+      ],
       "url": "https://www.google.com/generate_204",
-      "icon": "https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png"
     },
     {
       "name": "Telegram",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png"
     },
     {
       "name": "Steam",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg"
     },
     {
       "name": "Epic",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000"
     },
     {
       "name": "AI",
       "type": "select",
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
       "include-all": true,
-      "proxies": ["故障转移", "全局直连", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "proxies": [
+         "故障转移", "全局直连",
+         "TW", "TW AUTO", "TW-负载均衡-轮询",
+         "SG", "SG AUTO", "SG-负载均衡-轮询",
+         "VN", "VN AUTO", "VN-负载均衡-轮询",
+         "JP", "JP AUTO", "JP-负载均衡-轮询",
+         "US", "US AUTO", "US-负载均衡-轮询",
+         "冷门"
+      ],
       "filter": "(?i)chatgpt|claude|gemini|grok",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg"
     },
     {
       "name": "Google",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg"
     },
     {
       "name": "微软服务",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg"
     },
     {
       "name": "苹果服务",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "interval": 300,
+      "timeout": 3000,
+      "max-failed-times": 3,
+      "lazy": true,
+      "hidden": false,
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg"
     },
+    // --- 地区分组 (HK, TW, SG, VN, JP, US) ---
+    // HK
     {
       "name": "HK",
       "type": "select",
       "include-all": true,
       "filter": "(?i)香港|Hong Kong|HK|🇭🇰",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png"
     },
     {
       "name": "HK AUTO",
       "type": "url-test",
+      "interval": 300,
+      "tolerance": 50,
       "include-all": true,
       "filter": "(?i)香港|Hong Kong|HK|🇭🇰",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
     {
       "name": "HK-负载均衡-轮询",
@@ -245,25 +320,27 @@ function main(config) {
       "filter": "(?i)香港|Hong Kong|HK|🇭🇰",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
+    // TW
     {
       "name": "TW",
       "type": "select",
       "include-all": true,
       "filter": "(?i)台|tw|TW",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png"
     },
     {
       "name": "TW AUTO",
       "type": "url-test",
+      "interval": 300,
+      "tolerance": 50,
       "include-all": true,
       "filter": "(?i)台|tw|TW",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
     {
       "name": "TW-负载均衡-轮询",
@@ -273,25 +350,27 @@ function main(config) {
       "filter": "(?i)台|tw|TW",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
+    // SG
     {
       "name": "SG",
       "type": "select",
       "include-all": true,
       "filter": "(?i)新加坡|Singapore|🇸🇬",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png"
     },
     {
       "name": "SG AUTO",
       "type": "url-test",
+      "interval": 300,
+      "tolerance": 50,
       "include-all": true,
       "filter": "(?i)新加坡|Singapore|🇸🇬",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
     {
       "name": "SG-负载均衡-轮询",
@@ -301,25 +380,27 @@ function main(config) {
       "filter": "(?i)新加坡|Singapore|🇸🇬",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
+    // VN
     {
       "name": "VN",
       "type": "select",
       "include-all": true,
       "filter": "(?i)越南|vietnam|VN|vn",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png"
     },
     {
       "name": "VN AUTO",
       "type": "url-test",
+      "interval": 300,
+      "tolerance": 50,
       "include-all": true,
       "filter": "(?i)越南|vietnam|VN|vn",
       "url": "https://www.google.com/generate_204",
       "icon": "https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
     {
       "name": "VN-负载均衡-轮询",
@@ -329,25 +410,27 @@ function main(config) {
       "filter": "(?i)越南|vietnam|VN|vn",
       "url": "https://www.google.com/generate_204",
       "icon": "https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
+    // JP
     {
       "name": "JP",
       "type": "select",
       "include-all": true,
       "filter": "(?i)日本|Japan|🇯🇵",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png"
     },
     {
       "name": "JP AUTO",
       "type": "url-test",
+      "interval": 300,
+      "tolerance": 50,
       "include-all": true,
       "filter": "(?i)日本|Japan|🇯🇵",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
     {
       "name": "JP-负载均衡-轮询",
@@ -357,25 +440,27 @@ function main(config) {
       "filter": "(?i)日本|Japan|🇯🇵",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
+    // US
     {
       "name": "US",
       "type": "select",
       "include-all": true,
       "filter": "(?i)美国|USA|🇺🇸",
       "url": "https://www.google.com/generate_204",
-      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png"
     },
     {
       "name": "US AUTO",
       "type": "url-test",
+      "interval": 300,
+      "tolerance": 50,
       "include-all": true,
       "filter": "(?i)美国|USA|🇺🇸",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
     {
       "name": "US-负载均衡-轮询",
@@ -385,51 +470,49 @@ function main(config) {
       "filter": "(?i)美国|USA|🇺🇸",
       "url": "https://www.google.com/generate_204",
       "icon": "https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": false, "hidden": true
+      "hidden": true
     },
+    // 其他
     {
       "name": "冷门",
       "type": "select",
       "include-all": true,
       "filter": "^(?!.*(官网|套餐|流量|异常|剩余|问题|证书|美国|US|香港|HK|HongKong|台湾|TW|新加坡|singapore|SG|日本|JP|Japan|越南|VN|vietnam)).*$",
-      "url": "https://www.google.com/generate_204",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "url": "https://www.google.com/generate_204"
     },
     {
       "name": "广告过滤",
       "type": "select",
       "proxies": ["REJECT", "DIRECT"],
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"
     },
     {
       "name": "全局直连",
       "type": "select",
+      "include-all": false,
       "proxies": ["DIRECT"],
       "url": "https://www.baidu.com",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
     },
     {
       "name": "全局拦截",
       "type": "select",
       "proxies": ["REJECT", "DIRECT"],
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg"
     },
     {
       "name": "漏网之鱼",
       "type": "select",
-      "proxies": ["故障转移", "全局直连", "HK", "HK AUTO", "HK-负载均衡-轮询", "TW", "TW AUTO", "TW-负载均衡-轮询", "SG", "SG AUTO", "SG-负载均衡-轮询", "VN", "VN AUTO", "VN-负载均衡-轮询", "JP", "JP AUTO", "JP-负载均衡-轮询", "US", "US AUTO", "US-负载均衡-轮询", "冷门"],
+      "include-all": false,
+      "proxies": standardProxies,
       "url": "https://www.google.com/generate_204",
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg",
-      "interval": 300, "timeout": 3000, "max-failed-times": 3, "lazy": true
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
     }
   ];
 
-  // 7. 规则集合提供者 (Rule Providers)
+  // 6. 规则集 (Rule Providers)
   config['rule-providers'] = {
     "reject": {
       "type": "http",
@@ -561,8 +644,8 @@ function main(config) {
     }
   };
 
-  // 8. 规则 (Rules)
-  config['rules'] = [
+  // 7. 路由规则 (Rules)
+  config.rules = [
     "PROCESS-NAME,com.valvesoftware.android.steam.community,Steam",
     "DOMAIN-KEYWORD,steam,Steam",
     "PROCESS-NAME,com.epicgames.portal,Epic",
