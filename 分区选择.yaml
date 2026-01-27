@@ -1,6 +1,5 @@
 dns:
   enable: true
-  ipv6: false  # 【已确认】关闭 IPv6
   listen: 0.0.0.0:1053
   default-nameserver:
     - 223.5.5.5
@@ -32,7 +31,6 @@ dns:
   nameserver:
     - https://1.1.1.1/dns-query
     - https://8.8.8.8/dns-query
-  prefer-h3: false
   respect-rules: true
   use-system-hosts: false
   cache-algorithm: arc
@@ -41,7 +39,6 @@ dns:
     - https://doh.pub/dns-query
 
 # 【已补全】Tun 混合模式配置
-ipv6: false
 unified-delay: true
 tcp-concurrent: true
 tun:
