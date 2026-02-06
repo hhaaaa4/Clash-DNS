@@ -223,8 +223,8 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 🚀 节点选择
       - SG AUTO
+      - 🚀 节点选择
       - HK AUTO
       - TW AUTO
       - US AUTO
@@ -240,12 +240,12 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
+      - SG AUTO
+      - SG
       - 故障转移
       - 全局直连
       - TW AUTO
       - TW
-      - SG AUTO
-      - SG
       - VN AUTO
       - VN
       - JP AUTO
