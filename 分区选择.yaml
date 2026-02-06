@@ -178,8 +178,8 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 🚀 节点选择
       - SG AUTO
+      - 🚀 节点选择
       - HK AUTO
       - TW AUTO
       - US AUTO
@@ -194,14 +194,14 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
-      - 全局直连
-      - TW AUTO
-      - TW
       - SG AUTO
       - SG
       - VN AUTO
       - VN
+      - 故障转移
+      - 全局直连
+      - TW AUTO
+      - TW
       - JP AUTO
       - US AUTO
       - 冷门
@@ -236,11 +236,11 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
+      - HK AUTO
+      - SG AUTO
       - 全局直连
       - 故障转移
       - 🚀 节点选择
-      - SG AUTO
-      - HK AUTO
       - TW AUTO
       - VN AUTO
       - US AUTO
@@ -254,11 +254,11 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
+      - HK AUTO
+      - SG AUTO
       - 全局直连
       - 故障转移
       - 🚀 节点选择
-      - SG AUTO
-      - HK AUTO
       - TW AUTO
       - VN AUTO
       - US AUTO
@@ -397,12 +397,12 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 🚀 节点选择
       - SG AUTO
       - HK AUTO
       - TW AUTO
       - US AUTO
       - JP AUTO
+      - 🚀 节点选择
       - 故障转移
       - 全局直连
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg
