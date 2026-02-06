@@ -1,6 +1,33 @@
+# ===================================================
+# 🇨🇳 🇻🇳 中越双向适配・终极优化版
+# ===================================================
+
+# --- 基础设置 ---
+ipv6: false           # 【优化】关闭 IPv6，防止路由绕路和位置泄露
+allow-lan: true
+mixed-port: 7890
+unified-delay: true
+tcp-concurrent: true
+external-controller: 127.0.0.1:9090
+keep-alive-interval: 15 # 【优化】每15秒心跳，防止 Telegram/微信 消息延迟
+
+# --- GEO 数据库 (已换 CDN) ---
+geodata-mode: true
+geo-auto-update: true
+geo-update-interval: 24
+geox-url:
+  geoip: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
+  geosite: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
+  mmdb: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.metadb
+
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+# --- DNS 配置 ---
 dns:
   enable: true
   listen: 0.0.0.0:1053
+  ipv6: false
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
@@ -24,32 +51,38 @@ dns:
     - time.*.gov
     - pool.ntp.org
     - localhost.work.weixin.qq.com
+    - +.gov.vn        # 【优化】防止越南政府网站 DNS 问题
   nameserver-policy:
-    geosite:private,cn:
+    "geosite:private,cn":
       - https://223.5.5.5/dns-query
       - https://doh.pub/dns-query
   nameserver:
     - https://1.1.1.1/dns-query
     - https://8.8.8.8/dns-query
+  fallback:
+    - https://208.67.222.222/dns-query
+    - https://1.0.0.1/dns-query
+  fallback-filter:
+    geoip: true
+    ipcidr:
+      - 240.0.0.0/4
   respect-rules: true
-  use-system-hosts: false
   cache-algorithm: arc
   proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://doh.pub/dns-query
 
-# 【已补全】Tun 混合模式配置
-unified-delay: true
-tcp-concurrent: true
+# --- Tun 模式 ---
 tun:
   enable: true
-  stack: mixed  # 混合模式
+  stack: mixed
   mtu: 1500
   dns-hijack:
     - any:53
   auto-route: true
   auto-detect-interface: true
 
+# --- 嗅探配置 ---
 sniffer:
   enable: true
   parse-pure-ip: true
@@ -57,60 +90,52 @@ sniffer:
   override-destination: false
   sniff:
     HTTP:
-      ports:
-        - 80
-        - 443
-      override-destination: false
+      ports: [80, 8080]
+      override-destination: true
     TLS:
-      ports:
-        - 443
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
   skip-domain:
-    - +.push.apple.com
+    - "Mijia Cloud"
+    - "+.push.apple.com"
   skip-dst-address:
-    - 91.105.192.0/23
     - 91.108.4.0/22
     - 91.108.8.0/21
     - 91.108.16.0/21
     - 91.108.56.0/22
-    - 95.161.64.0/20
     - 149.154.160.0/20
-    - 185.76.151.0/24
-    - 2001:67c:4e8::/48
-    - 2001:b28:f23c::/47
-    - 2001:b28:f23f::/48
-    - 2a0a:f280:203::/48
+    - 149.154.164.0/22
 
+# --- 代理组配置 ---
 proxy-groups:
-  - name: 节点选择
+  # 1. 主节点选择 (新加坡优先，适合越南周边)
+  - name: 🚀 节点选择
     type: select
     interval: 300
     timeout: 3000
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
-      - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
       - SG AUTO
       - SG-负载均衡-轮询
-      - VN
+      - SG
+      - HK AUTO
+      - HK-负载均衡-轮询
+      - HK
       - VN AUTO
       - VN-负载均衡-轮询
-      - JP
+      - VN
+      - TW AUTO
+      - TW
       - JP AUTO
-      - JP-负载均衡-轮询
-      - US
+      - JP
       - US AUTO
-      - US-负载均衡-轮询
+      - US
+      - 故障转移
+      - 全局直连
       - 冷门
-    filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
-    url: https://www.google.com/generate_204
+    url: https://www.gstatic.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg
 
   - name: 故障转移
@@ -121,38 +146,29 @@ proxy-groups:
     lazy: false
     include-all: true
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书)).*$
-    url: https://www.google.com/generate_204
+    url: https://www.gstatic.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
 
-  - name: 越南APP
+  # 2. 越南服务专属 (Zalo/Grab/银行)
+  - name: 🇻🇳 越南服务
     type: select
     interval: 300
     timeout: 3000
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
-      - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
       - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
+      - VN
+      - 全局直连         # 👈 银行App风控时选这个
+      - SG AUTO
+      - SG
+      - HK AUTO
+      - HK
+      - 故障转移
       - US AUTO
-      - US-负载均衡-轮询
+      - JP AUTO
       - 冷门
-    url: https://www.google.com/generate_204
+    url: https://www.gstatic.com/generate_204
     icon: https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png
 
   - name: W&F&X
@@ -162,28 +178,14 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
+      - 🚀 节点选择
+      - SG AUTO
+      - HK AUTO
+      - TW AUTO
+      - US AUTO
+      - JP AUTO
       - 故障转移
       - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
-      - US AUTO
-      - US-负载均衡-轮询
-      - 冷门
-    url: https://www.google.com/generate_204
 
   - name: Tiktok
     type: select
@@ -194,25 +196,18 @@ proxy-groups:
     proxies:
       - 故障转移
       - 全局直连
-      - TW
       - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
+      - TW
       - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
+      - SG
       - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
+      - VN
       - JP AUTO
-      - JP-负载均衡-轮询
-      - US
       - US AUTO
-      - US-负载均衡-轮询
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png
 
+  # 3. Telegram (新加坡优先)
   - name: Telegram
     type: select
     interval: 300
@@ -220,30 +215,20 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
-      - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
       - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
+      - SG
+      - HK AUTO
+      - HK
+      - 🚀 节点选择
+      - 故障转移
+      - TW AUTO
       - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
       - JP AUTO
-      - JP-负载均衡-轮询
-      - US
       - US AUTO
-      - US-负载均衡-轮询
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
+  # 4. 游戏 (直连优先)
   - name: Steam
     type: select
     interval: 300
@@ -251,28 +236,15 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
       - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
+      - 故障转移
+      - 🚀 节点选择
       - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
+      - HK AUTO
+      - TW AUTO
       - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
       - US AUTO
-      - US-负载均衡-轮询
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg
 
   - name: Epic
@@ -282,60 +254,41 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
       - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
+      - 故障转移
+      - 🚀 节点选择
       - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
+      - HK AUTO
+      - TW AUTO
       - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
       - US AUTO
-      - US-负载均衡-轮询
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000
 
+  # 5. AI (美国优先)
   - name: AI
     type: select
     interval: 300
     timeout: 3000
     max-failed-times: 3
     lazy: true
-    include-all: true
     proxies:
-      - 故障转移
-      - 全局直连
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
       - US AUTO
-      - US-负载均衡-轮询
+      - US
+      - SG AUTO
+      - SG
+      - JP AUTO
+      - TW AUTO
+      - 🚀 节点选择
+      - 故障转移
+      - HK AUTO
+      - VN AUTO
+      - 全局直连
       - 冷门
     filter: (?i)chatgpt|claude|gemini|grok
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
+  # 6. Google (美国优先)
   - name: Google
     type: select
     interval: 300
@@ -343,28 +296,19 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
-      - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
       - US AUTO
-      - US-负载均衡-轮询
+      - US
+      - HK AUTO
+      - HK
+      - SG AUTO
+      - SG
+      - 🚀 节点选择
+      - 故障转移
+      - TW AUTO
+      - JP AUTO
+      - VN AUTO
+      - 全局直连
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
 
   - name: 微软服务
@@ -374,28 +318,13 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
       - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
+      - 故障转移
       - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
+      - HK AUTO
       - US AUTO
-      - US-负载均衡-轮询
+      - 🚀 节点选择
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg
 
   - name: 苹果服务
@@ -405,250 +334,14 @@ proxy-groups:
     max-failed-times: 3
     lazy: true
     proxies:
-      - 故障转移
       - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
+      - 故障转移
       - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
+      - HK AUTO
       - US AUTO
-      - US-负载均衡-轮询
+      - 🚀 节点选择
       - 冷门
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg
-
-  - name: HK
-    type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    include-all: true
-    filter: (?i)香港|Hong Kong|HK|🇭🇰
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-    
-  - name: HK AUTO
-    type: url-test
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)香港|Hong Kong|HK|🇭🇰
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-    
-  - name: HK-负载均衡-轮询
-    type: load-balance
-    strategy: round-robin
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)香港|Hong Kong|HK|🇭🇰
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
-
-  - name: TW
-    type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
-    include-all: true
-    filter: (?i)台|tw|TW
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-
-  - name: TW AUTO
-    type: url-test
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)台|tw|TW
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-
-  - name: TW-负载均衡-轮询
-    type: load-balance
-    strategy: round-robin
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)台|tw|TW
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TW.png
-
-  - name: SG
-    type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
-    include-all: true
-    filter: (?i)新加坡|Singapore|🇸🇬
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-
-  - name: SG AUTO
-    type: url-test
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)新加坡|Singapore|🇸🇬
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-
-  - name: SG-负载均衡-轮询
-    type: load-balance
-    strategy: round-robin
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)新加坡|Singapore|🇸🇬
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/SG.png
-
-  - name: VN
-    type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
-    include-all: true
-    filter: (?i)越南|vietnam|VN|vn
-    url: https://www.google.com/generate_204
-    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-
-  - name: VN AUTO
-    type: url-test
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)越南|vietnam|VN|vn
-    url: https://www.google.com/generate_204
-    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-
-  - name: VN-负载均衡-轮询
-    type: load-balance
-    strategy: round-robin
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)越南|vietnam|VN|vn
-    url: https://www.google.com/generate_204
-    icon: https://www.zhaoguoqi.com/upload/202302/224/Medium_png_20230210040006_31995_0_300x200.png
-
-  - name: JP
-    type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
-    include-all: true
-    filter: (?i)日本|Japan|🇯🇵
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-
-  - name: JP AUTO
-    type: url-test
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)日本|Japan|🇯🇵
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-
-  - name: JP-负载均衡-轮询
-    type: load-balance
-    strategy: round-robin
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)日本|Japan|🇯🇵
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/JP.png
-
-  - name: US
-    type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
-    include-all: true
-    filter: (?i)美国|USA|🇺🇸
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
-
-  - name: US AUTO
-    type: url-test
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)美国|USA|🇺🇸
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
-
-  - name: US-负载均衡-轮询
-    type: load-balance
-    strategy: round-robin
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: false
-    hidden: true
-    include-all: true
-    filter: (?i)美国|USA|🇺🇸
-    url: https://www.google.com/generate_204
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/US.png
 
   - name: 冷门
     type: select
@@ -656,10 +349,22 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     lazy: true
-    hidden: false
-    include-all: true
+    proxies:
+      - 故障转移
+      - 全局直连
+      - HK
+      - HK AUTO
+      - TW
+      - TW AUTO
+      - SG
+      - SG AUTO
+      - VN
+      - VN AUTO
+      - JP
+      - JP AUTO
+      - US
+      - US AUTO
     filter: ^(?!.*(官网|套餐|流量|异常|剩余|问题|证书|美国|US|香港|HK|HongKong|台湾|TW|新加坡|singapore|SG|日本|JP|Japan|越南|VN|vietnam)).*$
-    url: https://www.google.com/generate_204
 
   - name: 广告过滤
     type: select
@@ -667,37 +372,22 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     lazy: true
-    hidden: false
     proxies:
       - REJECT
       - DIRECT
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg
 
   - name: 全局直连
     type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
-    include-all: false
     proxies:
       - DIRECT
-    url: https://www.baidu.com
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg
 
   - name: 全局拦截
     type: select
-    interval: 300
-    timeout: 3000
-    max-failed-times: 3
-    lazy: true
-    hidden: false
     proxies:
       - REJECT
       - DIRECT
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg
 
   - name: 漏网之鱼
@@ -706,34 +396,38 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     lazy: true
-    hidden: false
-    include-all: false
     proxies:
+      - 🚀 节点选择
+      - SG AUTO
+      - HK AUTO
+      - TW AUTO
+      - US AUTO
+      - JP AUTO
       - 故障转移
       - 全局直连
-      - HK
-      - HK AUTO
-      - HK-负载均衡-轮询
-      - TW
-      - TW AUTO
-      - TW-负载均衡-轮询
-      - SG
-      - SG AUTO
-      - SG-负载均衡-轮询
-      - VN
-      - VN AUTO
-      - VN-负载均衡-轮询
-      - JP
-      - JP AUTO
-      - JP-负载均衡-轮询
-      - US
-      - US AUTO
-      - US-负载均衡-轮询
-      - 冷门
-    url: https://www.google.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg
 
+# --- 规则配置 ---
 rules:
+  # 0. 基础优化
+  - DST-PORT,123,全局直连  # NTP 时间同步
+  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube|google)),REJECT # 阻断QUIC
+
+  # 1. 越南专属匹配 -> 🇻🇳 越南服务
+  - PROCESS-NAME,com.zing.zalo,🇻🇳 越南服务
+  - PROCESS-NAME,vn.com.vng.zalopay,🇻🇳 越南服务
+  - PROCESS-NAME,com.grabtaxi.passenger,🇻🇳 越南服务
+  - PROCESS-NAME,com.shopee.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,zalo.me,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,zing.vn,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,momo.vn,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,zalopay,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,vietcombank,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,tpbank,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,techcombank,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,gov.vn,🇻🇳 越南服务
+
+  # 2. 进程/域名匹配
   - PROCESS-NAME,com.valvesoftware.android.steam.community,Steam
   - DOMAIN-KEYWORD,steam,Steam
   - PROCESS-NAME,com.epicgames.portal,Epic
@@ -761,10 +455,7 @@ rules:
   - PROCESS-NAME,com.whatsapp,W&F&X
   - PROCESS-NAME,org.telegram.group,Telegram
   - PROCESS-NAME,com.twitter.android,W&F&X
-  - PROCESS-NAME,com.zing.zalo,越南APP
-  - PROCESS-NAME,vn.com.vng.zalopay,越南APP
-  - PROCESS-NAME,com.grabtaxi.passenger,越南APP
-  - PROCESS-NAME,com.shopee.vn,越南APP
+
   - DOMAIN-KEYWORD,tiktok,Tiktok
   - DOMAIN-KEYWORD,gemini,AI
   - DOMAIN-KEYWORD,google,Google
@@ -772,8 +463,10 @@ rules:
   - DOMAIN-SUFFIX,googleapis.cn,Google
   - DOMAIN-SUFFIX,gstatic.com,Google
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,Google
-  - DOMAIN-SUFFIX,github.io,节点选择
-  - DOMAIN,v2rayse.com,节点选择
+  - DOMAIN-SUFFIX,github.io,🚀 节点选择
+  - DOMAIN,v2rayse.com,🚀 节点选择
+  
+  # 3. 规则集匹配
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
   - RULE-SET,icloud,苹果服务
@@ -781,11 +474,11 @@ rules:
   - RULE-SET,AI,AI
   - RULE-SET,google,Google
   - RULE-SET,YouTube,Google
-  - RULE-SET,Netflix,节点选择
-  - RULE-SET,Spotify,节点选择
-  - RULE-SET,proxy,节点选择
-  - RULE-SET,gfw,节点选择
-  - RULE-SET,tld-not-cn,节点选择
+  - RULE-SET,Netflix,🚀 节点选择
+  - RULE-SET,Spotify,🚀 节点选择
+  - RULE-SET,proxy,🚀 节点选择
+  - RULE-SET,gfw,🚀 节点选择
+  - RULE-SET,tld-not-cn,🚀 节点选择
   - RULE-SET,direct,全局直连
   - RULE-SET,lancidr,全局直连,no-resolve
   - RULE-SET,cncidr,全局直连,no-resolve
@@ -795,90 +488,91 @@ rules:
   - GEOIP,CN,全局直连,no-resolve
   - MATCH,漏网之鱼
 
+# --- 规则集提供者 (CDN 加速) ---
 rule-providers:
   reject:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
     path: ./ruleset/loyalsoldier/reject.yaml
   icloud:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/icloud.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
     path: ./ruleset/loyalsoldier/icloud.yaml
   apple:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/apple.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
     path: ./ruleset/loyalsoldier/apple.yaml
   google:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/google.yaml
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
     path: ./ruleset/loyalsoldier/google.yaml
   proxy:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
     path: ./ruleset/loyalsoldier/proxy.yaml
   direct:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
     path: ./ruleset/loyalsoldier/direct.yaml
   private:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
     path: ./ruleset/loyalsoldier/private.yaml
   gfw:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
     path: ./ruleset/loyalsoldier/gfw.yaml
   tld-not-cn:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/tld-not-cn.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
     path: ./ruleset/loyalsoldier/tld-not-cn.yaml
   telegramcidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
     path: ./ruleset/loyalsoldier/telegramcidr.yaml
   cncidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
     path: ./ruleset/loyalsoldier/cncidr.yaml
   lancidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
     path: ./ruleset/loyalsoldier/lancidr.yaml
   YouTube:
     type: http
@@ -908,16 +602,3 @@ rule-providers:
     behavior: classical
     url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.txt
     path: ./ruleset/xiaolin-007/AI.yaml
-
-profile:
-  store-selected: true
-  store-fake-ip: true
-geo-auto-update: true
-geo-update-interval: 3
-geodata-mode: false
-
-geox-url:
-  geoip: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
-  geosite: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat
-  mmdb: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb
-  asn: https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb
