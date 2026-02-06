@@ -224,11 +224,11 @@ proxy-groups:
     lazy: true
     proxies:
       - SG AUTO
-      - 🚀 节点选择
       - HK AUTO
       - TW AUTO
       - US AUTO
       - JP AUTO
+      - 🚀 节点选择
       - 故障转移
       - 全局直连
 
@@ -242,12 +242,12 @@ proxy-groups:
     proxies:
       - SG AUTO
       - SG
+      - VN AUTO
+      - VN
       - 故障转移
       - 全局直连
       - TW AUTO
       - TW
-      - VN AUTO
-      - VN
       - JP AUTO
       - US AUTO
       - 冷门
