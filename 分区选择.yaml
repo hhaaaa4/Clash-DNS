@@ -1,5 +1,5 @@
 # ===================================================
-# 🇨🇳 🇻🇳 中越双向适配・终极优化版 (修复节点找不到问题)
+# 🇨🇳 🇻🇳 中越双向适配・终极无错完美版
 # ===================================================
 
 # --- 基础设置 ---
@@ -110,7 +110,7 @@ sniffer:
 # --- 代理组配置 ---
 proxy-groups:
   # =================================================
-  # ⬇️ 新增：自动从订阅抓取节点的底层地区分组 ⬇️
+  # ⬇️ 自动从订阅抓取节点的底层地区分组 (必须放在最前)
   # =================================================
   - name: HK
     type: select
@@ -206,7 +206,7 @@ proxy-groups:
     filter: "(?i)美|us|united states|america"
 
   # =================================================
-  # ⬇️ 以下为你原来的业务逻辑分组 ⬇️
+  # ⬇️ 业务逻辑分组
   # =================================================
   - name: 🚀 节点选择
     type: select
@@ -256,7 +256,7 @@ proxy-groups:
     proxies:
       - VN AUTO
       - VN
-      - 全局直连         # 👈 银行App风控时选这个
+      - 全局直连
       - SG AUTO
       - SG
       - HK AUTO
@@ -503,7 +503,10 @@ proxy-groups:
 # --- 规则配置 ---
 rules:
   - DST-PORT,123,全局直连  # NTP 时间同步
-  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube|google)),REJECT # 阻断QUIC
+  
+  # 【修复】拆分 GEOSITE 阻断规则，防止解析报错
+  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube)),REJECT
+  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,google)),REJECT
 
   - PROCESS-NAME,com.zing.zalo,🇻🇳 越南服务
   - PROCESS-NAME,vn.com.vng.zalopay,🇻🇳 越南服务
