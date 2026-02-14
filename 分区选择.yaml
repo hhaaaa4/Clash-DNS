@@ -1,5 +1,5 @@
 # ===================================================
-# 🇨🇳 🇻🇳 中越双向适配・终极优化版
+# 🇨🇳 🇻🇳 中越双向适配・终极优化版 (修复版)
 # ===================================================
 
 # --- 基础设置 ---
@@ -53,7 +53,7 @@ dns:
     - localhost.work.weixin.qq.com
     - +.gov.vn        # 【优化】防止越南政府网站 DNS 问题
   nameserver-policy:
-    "geosite:private,cn":
+    "geosite:cn,private":
       - https://223.5.5.5/dns-query
       - https://doh.pub/dns-query
   nameserver:
@@ -79,6 +79,7 @@ tun:
   dns-hijack:
     - any:53
   auto-route: true
+  strict-route: false   # 【新增优化】防止 Tun 模式接管局域网设备(如打印机/投屏)
   auto-detect-interface: true
 
 # --- 嗅探配置 ---
@@ -494,110 +495,110 @@ rule-providers:
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.yaml
     path: ./ruleset/loyalsoldier/reject.yaml
   icloud:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.yaml
     path: ./ruleset/loyalsoldier/icloud.yaml
   apple:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.yaml
     path: ./ruleset/loyalsoldier/apple.yaml
   google:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.yaml
     path: ./ruleset/loyalsoldier/google.yaml
   proxy:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.yaml
     path: ./ruleset/loyalsoldier/proxy.yaml
   direct:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.yaml
     path: ./ruleset/loyalsoldier/direct.yaml
   private:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.yaml
     path: ./ruleset/loyalsoldier/private.yaml
   gfw:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.yaml
     path: ./ruleset/loyalsoldier/gfw.yaml
   tld-not-cn:
     type: http
     format: yaml
     interval: 86400
     behavior: domain
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.yaml
     path: ./ruleset/loyalsoldier/tld-not-cn.yaml
   telegramcidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.yaml
     path: ./ruleset/loyalsoldier/telegramcidr.yaml
   cncidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.yaml
     path: ./ruleset/loyalsoldier/cncidr.yaml
   lancidr:
     type: http
     format: yaml
     interval: 86400
     behavior: ipcidr
-    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    url: https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.yaml
     path: ./ruleset/loyalsoldier/lancidr.yaml
   YouTube:
     type: http
     format: yaml
     interval: 86400
     behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/YouTube.txt
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/YouTube.yaml
     path: ./ruleset/xiaolin-007/YouTube.yaml
   Netflix:
     type: http
     format: yaml
     interval: 86400
     behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Netflix.txt
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Netflix.yaml
     path: ./ruleset/xiaolin-007/Netflix.yaml
   Spotify:
     type: http
     format: yaml
     interval: 86400
     behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Spotify.txt
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Spotify.yaml
     path: ./ruleset/xiaolin-007/Spotify.yaml
   AI:
     type: http
     format: yaml
     interval: 86400
     behavior: classical
-    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.txt
+    url: https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.yaml
     path: ./ruleset/xiaolin-007/AI.yaml
