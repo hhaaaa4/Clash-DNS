@@ -114,7 +114,6 @@ sniffer:
 
 # --- TUN 模式 (适用于 Windows 接管所有流量) ---
 tun:
-  enable: true
   stack: mixed  
   mtu: 1500
   dns-hijack:
