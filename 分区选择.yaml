@@ -1,15 +1,15 @@
 # ===================================================
-# 🇨🇳 🇻🇳 中越双向适配・终极优化版 (修复版)
+# 🇨🇳 🇻🇳 中越双向适配・终极优化版 (修复节点找不到问题)
 # ===================================================
 
 # --- 基础设置 ---
-ipv6: false           # 【优化】关闭 IPv6，防止路由绕路和位置泄露
+ipv6: false
 allow-lan: true
 mixed-port: 7890
 unified-delay: true
 tcp-concurrent: true
 external-controller: 127.0.0.1:9090
-keep-alive-interval: 15 # 【优化】每15秒心跳，防止 Telegram/微信 消息延迟
+keep-alive-interval: 15
 
 # --- GEO 数据库 (已换 CDN) ---
 geodata-mode: true
@@ -51,7 +51,7 @@ dns:
     - time.*.gov
     - pool.ntp.org
     - localhost.work.weixin.qq.com
-    - +.gov.vn        # 【优化】防止越南政府网站 DNS 问题
+    - +.gov.vn
   nameserver-policy:
     "geosite:cn,private":
       - https://223.5.5.5/dns-query
@@ -79,7 +79,7 @@ tun:
   dns-hijack:
     - any:53
   auto-route: true
-  strict-route: false   # 【新增优化】防止 Tun 模式接管局域网设备(如打印机/投屏)
+  strict-route: false
   auto-detect-interface: true
 
 # --- 嗅探配置 ---
@@ -109,7 +109,105 @@ sniffer:
 
 # --- 代理组配置 ---
 proxy-groups:
-  # 1. 主节点选择 (新加坡优先，适合越南周边)
+  # =================================================
+  # ⬇️ 新增：自动从订阅抓取节点的底层地区分组 ⬇️
+  # =================================================
+  - name: HK
+    type: select
+    include-all: true
+    filter: "(?i)港|hk|hongkong|hong kong"
+  - name: HK AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    include-all: true
+    filter: "(?i)港|hk|hongkong|hong kong"
+  - name: HK-负载均衡-轮询
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    include-all: true
+    filter: "(?i)港|hk|hongkong|hong kong"
+
+  - name: SG
+    type: select
+    include-all: true
+    filter: "(?i)新|sg|singapore"
+  - name: SG AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    include-all: true
+    filter: "(?i)新|sg|singapore"
+  - name: SG-负载均衡-轮询
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    include-all: true
+    filter: "(?i)新|sg|singapore"
+
+  - name: VN
+    type: select
+    include-all: true
+    filter: "(?i)越|vn|vietnam"
+  - name: VN AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    include-all: true
+    filter: "(?i)越|vn|vietnam"
+  - name: VN-负载均衡-轮询
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    include-all: true
+    filter: "(?i)越|vn|vietnam"
+
+  - name: TW
+    type: select
+    include-all: true
+    filter: "(?i)台|tw|taiwan"
+  - name: TW AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    include-all: true
+    filter: "(?i)台|tw|taiwan"
+
+  - name: JP
+    type: select
+    include-all: true
+    filter: "(?i)日|jp|japan"
+  - name: JP AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    include-all: true
+    filter: "(?i)日|jp|japan"
+
+  - name: US
+    type: select
+    include-all: true
+    filter: "(?i)美|us|united states|america"
+  - name: US AUTO
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    include-all: true
+    filter: "(?i)美|us|united states|america"
+
+  # =================================================
+  # ⬇️ 以下为你原来的业务逻辑分组 ⬇️
+  # =================================================
   - name: 🚀 节点选择
     type: select
     interval: 300
@@ -149,7 +247,6 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
 
-  # 2. 越南服务专属 (Zalo/Grab/银行)
   - name: 🇻🇳 越南服务
     type: select
     interval: 300
@@ -207,7 +304,6 @@ proxy-groups:
       - 冷门
     icon: https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/2840/tiktok-logo-256.png
 
-  # 3. Telegram (新加坡优先)
   - name: Telegram
     type: select
     interval: 300
@@ -228,7 +324,6 @@ proxy-groups:
       - 冷门
     icon: https://cdn3.iconfinder.com/data/icons/3d-social-media-pack/256/Telegram.png
 
-  # 4. 游戏 (直连优先)
   - name: Steam
     type: select
     interval: 300
@@ -265,7 +360,6 @@ proxy-groups:
       - 冷门
     icon: https://img.icons8.com/?size=100&id=gItgZriuEvjv&format=png&color=000000
 
-  # 5. AI (美国优先)
   - name: AI
     type: select
     interval: 300
@@ -288,7 +382,6 @@ proxy-groups:
     filter: (?i)chatgpt|claude|gemini|grok
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
 
-  # 6. Google (美国优先)
   - name: Google
     type: select
     interval: 300
@@ -409,11 +502,9 @@ proxy-groups:
 
 # --- 规则配置 ---
 rules:
-  # 0. 基础优化
   - DST-PORT,123,全局直连  # NTP 时间同步
   - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube|google)),REJECT # 阻断QUIC
 
-  # 1. 越南专属匹配 -> 🇻🇳 越南服务
   - PROCESS-NAME,com.zing.zalo,🇻🇳 越南服务
   - PROCESS-NAME,vn.com.vng.zalopay,🇻🇳 越南服务
   - PROCESS-NAME,com.grabtaxi.passenger,🇻🇳 越南服务
@@ -427,7 +518,6 @@ rules:
   - DOMAIN-KEYWORD,techcombank,🇻🇳 越南服务
   - DOMAIN-SUFFIX,gov.vn,🇻🇳 越南服务
 
-  # 2. 进程/域名匹配
   - PROCESS-NAME,com.valvesoftware.android.steam.community,Steam
   - DOMAIN-KEYWORD,steam,Steam
   - PROCESS-NAME,com.epicgames.portal,Epic
@@ -466,7 +556,6 @@ rules:
   - DOMAIN-SUFFIX,github.io,🚀 节点选择
   - DOMAIN,v2rayse.com,🚀 节点选择
   
-  # 3. 规则集匹配
   - RULE-SET,private,全局直连
   - RULE-SET,reject,广告过滤
   - RULE-SET,icloud,苹果服务
@@ -488,7 +577,7 @@ rules:
   - GEOIP,CN,全局直连,no-resolve
   - MATCH,漏网之鱼
 
-# --- 规则集提供者 (CDN 加速) ---
+# --- 规则集提供者 ---
 rule-providers:
   reject:
     type: http
