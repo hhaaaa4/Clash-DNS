@@ -74,7 +74,6 @@ dns:
 
 # --- Tun 模式 ---
 tun:
-  enable: true
   stack: mixed
   mtu: 1500
   dns-hijack:
