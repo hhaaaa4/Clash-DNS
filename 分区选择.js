@@ -36,8 +36,8 @@ const dnsConfig = {
     "time.*.gov",
     "pool.ntp.org",
     "localhost.work.weixin.qq.com",
-    "+.steamcontent.com",             
-    "client-download.steampowered.com" 
+    "+.steamcontent.com",             // 放行 Steam 下载 CDN 的真实 IP
+    "client-download.steampowered.com" // 放行 Steam 客户端下载真实 IP
   ],
   "default-nameserver": ["223.5.5.5","1.2.4.8"],
   "nameserver": foreignNameservers,
@@ -45,7 +45,7 @@ const dnsConfig = {
   "direct-nameserver": domesticNameservers,
   "nameserver-policy": {
     "geosite:private,cn": domesticNameservers,
-    // 💡【核心修复】：强制 Steam 下载域名使用国内 DNS 解析，确保获取国内 CDN 节点！
+    // 强制 Steam 下载域名使用国内 DNS 解析，确保获取国内 CDN（内容分发网络）节点！
     "+.steamcontent.com": domesticNameservers,
     "client-download.steampowered.com": domesticNameservers
   }
@@ -109,6 +109,11 @@ const rules = [
   "DOMAIN-SUFFIX,xn--ngstr-lra8j.com,节点选择", 
   "DOMAIN-SUFFIX,github.io,节点选择", 
   "DOMAIN,v2rayse.com,节点选择", 
+  
+  // 【核心修复】：必须把游戏规则放在 applications 前面，防止流量被提前拦截！
+  "RULE-SET,GameDownload,游戏下载", 
+  "RULE-SET,Games,游戏",            
+  
   "RULE-SET,applications,全局直连",
   "RULE-SET,private,全局直连",
   "RULE-SET,reject,广告过滤",
@@ -120,10 +125,6 @@ const rules = [
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
-  
-  "RULE-SET,GameDownload,游戏下载", 
-  "RULE-SET,Games,游戏",            
-  
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
   "RULE-SET,gfw,节点选择",
