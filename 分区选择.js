@@ -81,14 +81,6 @@ xlClassical.forEach(name => {
   };
 });
 
-// 新增：引入全面覆盖各类游戏平台的游戏规则集
-ruleProviders["Games"] = {
-  ...ruleProviderCommon,
-  "behavior": "classical",
-  "url": "https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Game/Game.yaml",
-  "path": "./ruleset/blackmatrix7/Games.yaml"
-};
-
 // 规则配置
 const rules = [
   "DOMAIN-SUFFIX,googleapis.cn,节点选择", 
@@ -107,7 +99,6 @@ const rules = [
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
-  "RULE-SET,Games,游戏服务", // 新增：将游戏规则指向"游戏服务"分组
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
   "RULE-SET,gfw,节点选择",
@@ -207,15 +198,6 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"
     },
     {
-      // 新增：游戏服务策略组
-      ...groupBaseOption, 
-      "name": "游戏服务", 
-      "type": "select", 
-      "include-all": false,
-      "proxies": ["节点选择", "香港-自动", "台湾-自动", "新加坡-自动", "美国-自动", "全局直连"],
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg"
-    },
-    {
       ...groupBaseOption, 
       "name": "微软服务", 
       "type": "select", 
@@ -253,6 +235,8 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"
     },
     {
+      // 💡 [重点修复]：解除了死循环！
+      // 移除了 "节点选择" 和 "include-all"，全局直连现在只包含 "DIRECT" 本身。
       ...groupBaseOption, "name": "全局直连", "type": "select", 
       "proxies": ["DIRECT"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
