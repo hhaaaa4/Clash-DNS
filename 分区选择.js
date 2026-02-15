@@ -153,7 +153,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "谷歌服务", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了原先无用的 filter 正则
+      "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg"
     },
@@ -161,7 +161,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "YouTube", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了 filter
+      "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg"
     },
@@ -169,7 +169,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "Netflix", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了 filter
+      "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/netflix.svg"
     },
@@ -185,7 +185,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "AI", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了 filter
+      "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg"
     },
@@ -193,7 +193,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "TikTok", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了 filter
+      "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"
     },
@@ -217,7 +217,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "哔哩哔哩港澳台", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了 filter
+      "include-all": false,
       "proxies": ["全局直连","节点选择","台湾-自动","香港-自动"],
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg"
     },
@@ -225,7 +225,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "Spotify", 
       "type": "select", 
-      "include-all": false, // 💡 [修改备注]：按要求改为了 false，并移除了 filter
+      "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/spotify.svg"
     },
@@ -235,8 +235,10 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"
     },
     {
-      ...groupBaseOption, "name": "全局直连", "type": "select", "include-all": true,
-      "proxies": ["DIRECT","节点选择"],
+      // 💡 [重点修复]：解除了死循环！
+      // 移除了 "节点选择" 和 "include-all"，全局直连现在只包含 "DIRECT" 本身。
+      ...groupBaseOption, "name": "全局直连", "type": "select", 
+      "proxies": ["DIRECT"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
     },
     {
