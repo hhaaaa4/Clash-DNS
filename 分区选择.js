@@ -271,4 +271,30 @@ function main(config) {
       "filter": "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
     },
     {
-      ...group
+      ...groupBaseOption, "name": "台湾-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      "filter": "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "越南-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "新加坡-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      "filter": "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": true, "filter": commonFilter,
+      "proxies": ["节点选择","全局直连"],
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
+    }
+  ];
+
+  // 为所有节点开启 UDP
+  if (Array.isArray(config["proxies"])) {
+    config["proxies"].forEach(proxy => {
+      if (proxy) proxy.udp = true;
+    });
+  }
+
+  return config;
+}
