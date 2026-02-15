@@ -12,7 +12,7 @@ const foreignNameservers = [
   "https://8.8.4.4/dns-query"         // GoogleDNS  
 ];
 
-// DNS配置
+// DNS配置 (已还原为最纯净的状态)
 const dnsConfig = {
   "enable": true,
   "listen": "0.0.0.0:1053",
@@ -35,19 +35,14 @@ const dnsConfig = {
     "time.*.com",
     "time.*.gov",
     "pool.ntp.org",
-    "localhost.work.weixin.qq.com",
-    "+.steamcontent.com",             // 放行 Steam 下载 CDN 的真实 IP
-    "client-download.steampowered.com" // 放行 Steam 客户端下载真实 IP
+    "localhost.work.weixin.qq.com"
   ],
   "default-nameserver": ["223.5.5.5","1.2.4.8"],
   "nameserver": foreignNameservers,
   "proxy-server-nameserver": domesticNameservers,
   "direct-nameserver": domesticNameservers,
   "nameserver-policy": {
-    "geosite:private,cn": domesticNameservers,
-    // 强制 Steam 下载域名使用国内 DNS 解析，确保获取国内 CDN（内容分发网络）节点！
-    "+.steamcontent.com": domesticNameservers,
-    "client-download.steampowered.com": domesticNameservers
+    "geosite:private,cn": domesticNameservers
   }
 };
 
@@ -86,15 +81,7 @@ xlClassical.forEach(name => {
   };
 });
 
-// 游戏下载（CDN）规则集
-ruleProviders["GameDownload"] = {
-  ...ruleProviderCommon,
-  "behavior": "classical",
-  "url": "https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Game/GameDownload/GameDownload.yaml",
-  "path": "./ruleset/blackmatrix7/gamedownload.yaml"
-};
-
-// 常规游戏平台规则集
+// 【合并】：只保留这一个通用大游戏规则，包含平台、联机和下载
 ruleProviders["Games"] = {
   ...ruleProviderCommon,
   "behavior": "classical",
@@ -110,8 +97,7 @@ const rules = [
   "DOMAIN-SUFFIX,github.io,节点选择", 
   "DOMAIN,v2rayse.com,节点选择", 
   
-  // 【核心修复】：必须把游戏规则放在 applications 前面，防止流量被提前拦截！
-  "RULE-SET,GameDownload,游戏下载", 
+  // 保留关键修复：游戏规则必须在 applications 之前
   "RULE-SET,Games,游戏",            
   
   "RULE-SET,applications,全局直连",
@@ -230,14 +216,6 @@ function main(config) {
       "include-all": false,
       "proxies": commonProxies, 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg" 
-    },
-    {
-      ...groupBaseOption, 
-      "name": "游戏下载", 
-      "type": "select", 
-      "include-all": false,
-      "proxies": ["全局直连", "节点选择", "香港-自动", "台湾-自动", "美国-自动"], 
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/download.svg" 
     },
     {
       ...groupBaseOption, 
