@@ -35,7 +35,9 @@ const dnsConfig = {
     "time.*.com",
     "time.*.gov",
     "pool.ntp.org",
-    "localhost.work.weixin.qq.com"
+    "localhost.work.weixin.qq.com",
+    "+.steamcontent.com",             // 【新增】：放行 Steam 下载 CDN 的真实 IP
+    "client-download.steampowered.com" // 【新增】：放行 Steam 客户端下载真实 IP
   ],
   "default-nameserver": ["223.5.5.5","1.2.4.8"],
   "nameserver": foreignNameservers,
@@ -81,7 +83,7 @@ xlClassical.forEach(name => {
   };
 });
 
-// 【优化】：添加专属的游戏下载（CDN）规则集，涵盖 Steam/Epic/EA/Xbox/PS/任天堂 等平台的下载服务器
+// 游戏下载（CDN）规则集
 ruleProviders["GameDownload"] = {
   ...ruleProviderCommon,
   "behavior": "classical",
@@ -89,7 +91,7 @@ ruleProviders["GameDownload"] = {
   "path": "./ruleset/blackmatrix7/gamedownload.yaml"
 };
 
-// 【新增】：常规游戏平台规则集
+// 常规游戏平台规则集
 ruleProviders["Games"] = {
   ...ruleProviderCommon,
   "behavior": "classical",
@@ -116,9 +118,8 @@ const rules = [
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
   
-  // 【重点优化】：注意以下两行的顺序！Clash 是从上往下匹配的。
-  "RULE-SET,GameDownload,全局直连", // 1. 先匹配“游戏下载”流量，强行指派为全局直连，保护你的节点流量不被偷跑。
-  "RULE-SET,Games,游戏",            // 2. 然后匹配“游戏”的商店访问、社区、联机对战流量，指派到你选择的代理节点组。
+  "RULE-SET,GameDownload,游戏下载", // 【重点修改】：指向新创建的“游戏下载”策略组
+  "RULE-SET,Games,游戏",            
   
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
@@ -225,6 +226,14 @@ function main(config) {
       "include-all": false,
       "proxies": commonProxies, 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg" 
+    },
+    {
+      ...groupBaseOption, 
+      "name": "游戏下载", // 【新增】：下载专用的策略组，让你拥有手动控制权
+      "type": "select", 
+      "include-all": false,
+      "proxies": ["全局直连", "节点选择", "香港-自动", "台湾-自动", "美国-自动"], // 默认挂在“全局直连”上
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/download.svg" 
     },
     {
       ...groupBaseOption, 
