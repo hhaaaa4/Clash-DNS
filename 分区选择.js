@@ -36,15 +36,18 @@ const dnsConfig = {
     "time.*.gov",
     "pool.ntp.org",
     "localhost.work.weixin.qq.com",
-    "+.steamcontent.com",             // 【新增】：放行 Steam 下载 CDN 的真实 IP
-    "client-download.steampowered.com" // 【新增】：放行 Steam 客户端下载真实 IP
+    "+.steamcontent.com",             
+    "client-download.steampowered.com" 
   ],
   "default-nameserver": ["223.5.5.5","1.2.4.8"],
   "nameserver": foreignNameservers,
   "proxy-server-nameserver": domesticNameservers,
   "direct-nameserver": domesticNameservers,
   "nameserver-policy": {
-    "geosite:private,cn": domesticNameservers
+    "geosite:private,cn": domesticNameservers,
+    // 💡【核心修复】：强制 Steam 下载域名使用国内 DNS 解析，确保获取国内 CDN 节点！
+    "+.steamcontent.com": domesticNameservers,
+    "client-download.steampowered.com": domesticNameservers
   }
 };
 
@@ -118,7 +121,7 @@ const rules = [
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
   
-  "RULE-SET,GameDownload,游戏下载", // 【重点修改】：指向新创建的“游戏下载”策略组
+  "RULE-SET,GameDownload,游戏下载", 
   "RULE-SET,Games,游戏",            
   
   "RULE-SET,google,谷歌服务",
@@ -229,10 +232,10 @@ function main(config) {
     },
     {
       ...groupBaseOption, 
-      "name": "游戏下载", // 【新增】：下载专用的策略组，让你拥有手动控制权
+      "name": "游戏下载", 
       "type": "select", 
       "include-all": false,
-      "proxies": ["全局直连", "节点选择", "香港-自动", "台湾-自动", "美国-自动"], // 默认挂在“全局直连”上
+      "proxies": ["全局直连", "节点选择", "香港-自动", "台湾-自动", "美国-自动"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/download.svg" 
     },
     {
