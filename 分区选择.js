@@ -81,6 +81,14 @@ xlClassical.forEach(name => {
   };
 });
 
+// 【新增】：添加主流的游戏规则集（使用广泛维护的 blackmatrix7 规则库，包含 Steam, Epic, 战网, 主机游戏等）
+ruleProviders["Games"] = {
+  ...ruleProviderCommon,
+  "behavior": "classical",
+  "url": "https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Game/Game.yaml",
+  "path": "./ruleset/blackmatrix7/games.yaml"
+};
+
 // 规则配置
 const rules = [
   "DOMAIN-SUFFIX,googleapis.cn,节点选择", 
@@ -99,6 +107,7 @@ const rules = [
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
+  "RULE-SET,Games,游戏", // 【新增】：将匹配到的游戏流量转发至“游戏”策略组
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
   "RULE-SET,gfw,节点选择",
@@ -196,6 +205,14 @@ function main(config) {
       "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"
+    },
+    {
+      ...groupBaseOption, 
+      "name": "游戏", // 【新增】：创建独立的“游戏”策略组
+      "type": "select", 
+      "include-all": false,
+      "proxies": commonProxies, // 继承了 commonProxies（节点选择, 自动组, 全局直连等）
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg" // 【新增】：适配的游戏手柄图标
     },
     {
       ...groupBaseOption, 
