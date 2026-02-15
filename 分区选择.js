@@ -81,7 +81,15 @@ xlClassical.forEach(name => {
   };
 });
 
-// 【新增】：添加主流的游戏规则集（使用广泛维护的 blackmatrix7 规则库，包含 Steam, Epic, 战网, 主机游戏等）
+// 【优化】：添加专属的游戏下载（CDN）规则集，涵盖 Steam/Epic/EA/Xbox/PS/任天堂 等平台的下载服务器
+ruleProviders["GameDownload"] = {
+  ...ruleProviderCommon,
+  "behavior": "classical",
+  "url": "https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Game/GameDownload/GameDownload.yaml",
+  "path": "./ruleset/blackmatrix7/gamedownload.yaml"
+};
+
+// 【新增】：常规游戏平台规则集
 ruleProviders["Games"] = {
   ...ruleProviderCommon,
   "behavior": "classical",
@@ -107,7 +115,11 @@ const rules = [
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
-  "RULE-SET,Games,游戏", // 【新增】：将匹配到的游戏流量转发至“游戏”策略组
+  
+  // 【重点优化】：注意以下两行的顺序！Clash 是从上往下匹配的。
+  "RULE-SET,GameDownload,全局直连", // 1. 先匹配“游戏下载”流量，强行指派为全局直连，保护你的节点流量不被偷跑。
+  "RULE-SET,Games,游戏",            // 2. 然后匹配“游戏”的商店访问、社区、联机对战流量，指派到你选择的代理节点组。
+  
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
   "RULE-SET,gfw,节点选择",
@@ -208,11 +220,11 @@ function main(config) {
     },
     {
       ...groupBaseOption, 
-      "name": "游戏", // 【新增】：创建独立的“游戏”策略组
+      "name": "游戏", 
       "type": "select", 
       "include-all": false,
-      "proxies": commonProxies, // 继承了 commonProxies（节点选择, 自动组, 全局直连等）
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg" // 【新增】：适配的游戏手柄图标
+      "proxies": commonProxies, 
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg" 
     },
     {
       ...groupBaseOption, 
@@ -252,8 +264,6 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"
     },
     {
-      // 💡 [重点修复]：解除了死循环！
-      // 移除了 "节点选择" 和 "include-all"，全局直连现在只包含 "DIRECT" 本身。
       ...groupBaseOption, "name": "全局直连", "type": "select", 
       "proxies": ["DIRECT"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
