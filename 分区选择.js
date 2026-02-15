@@ -12,7 +12,7 @@ const foreignNameservers = [
   "https://8.8.4.4/dns-query"         // GoogleDNS  
 ];
 
-// DNS配置 (已还原为最纯净的状态)
+// DNS配置
 const dnsConfig = {
   "enable": true,
   "listen": "0.0.0.0:1053",
@@ -81,12 +81,12 @@ xlClassical.forEach(name => {
   };
 });
 
-// 【合并】：只保留这一个通用大游戏规则，包含平台、联机和下载
+// 新增：引入全面覆盖各类游戏平台的游戏规则集
 ruleProviders["Games"] = {
   ...ruleProviderCommon,
   "behavior": "classical",
   "url": "https://fastly.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Game/Game.yaml",
-  "path": "./ruleset/blackmatrix7/games.yaml"
+  "path": "./ruleset/blackmatrix7/Games.yaml"
 };
 
 // 规则配置
@@ -96,10 +96,6 @@ const rules = [
   "DOMAIN-SUFFIX,xn--ngstr-lra8j.com,节点选择", 
   "DOMAIN-SUFFIX,github.io,节点选择", 
   "DOMAIN,v2rayse.com,节点选择", 
-  
-  // 保留关键修复：游戏规则必须在 applications 之前
-  "RULE-SET,Games,游戏",            
-  
   "RULE-SET,applications,全局直连",
   "RULE-SET,private,全局直连",
   "RULE-SET,reject,广告过滤",
@@ -111,6 +107,7 @@ const rules = [
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
+  "RULE-SET,Games,游戏服务", // 新增：将游戏规则指向"游戏服务"分组
   "RULE-SET,google,谷歌服务",
   "RULE-SET,proxy,节点选择",
   "RULE-SET,gfw,节点选择",
@@ -210,12 +207,13 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"
     },
     {
+      // 新增：游戏服务策略组
       ...groupBaseOption, 
-      "name": "游戏", 
+      "name": "游戏服务", 
       "type": "select", 
       "include-all": false,
-      "proxies": commonProxies, 
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg" 
+      "proxies": ["节点选择", "香港-自动", "台湾-自动", "新加坡-自动", "美国-自动", "全局直连"],
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/gamepad.svg"
     },
     {
       ...groupBaseOption, 
@@ -273,30 +271,4 @@ function main(config) {
       "filter": "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
     },
     {
-      ...groupBaseOption, "name": "台湾-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
-      "filter": "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$"
-    },
-    {
-      ...groupBaseOption, "name": "越南-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
-      "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
-    },
-    {
-      ...groupBaseOption, "name": "新加坡-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
-      "filter": "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
-    },
-    {
-      ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": true, "filter": commonFilter,
-      "proxies": ["节点选择","全局直连"],
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
-    }
-  ];
-
-  // 为所有节点开启 UDP
-  if (Array.isArray(config["proxies"])) {
-    config["proxies"].forEach(proxy => {
-      if (proxy) proxy.udp = true;
-    });
-  }
-
-  return config;
-}
+      ...group
