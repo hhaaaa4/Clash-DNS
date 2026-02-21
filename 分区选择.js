@@ -87,6 +87,7 @@ const rules = [
   "DOMAIN-SUFFIX,gstatic.com,节点选择", 
   "DOMAIN-SUFFIX,xn--ngstr-lra8j.com,节点选择", 
   "DOMAIN-SUFFIX,github.io,节点选择", 
+  "DOMAIN-KEYWORD,jspoo,全局直连"
   "DOMAIN,v2rayse.com,节点选择", 
   "RULE-SET,applications,全局直连",
   "RULE-SET,private,全局直连",
