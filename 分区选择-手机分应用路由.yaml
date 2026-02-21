@@ -548,6 +548,7 @@ rules:
   - DST-PORT,123,全局直连
   # 【阻断 QUIC】防止 Youtube/Google 走 UDP 协议导致在越南网络下卡顿/断流
   - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube|google)),REJECT
+  - DOMAIN-KEYWORD,jspoo,全局直连
 
   # --- 1. 🇻🇳 越南专属服务 (分流到越南组) ---
   # 包含 Zalo, Zalopay, Grab, Shopee VN, 以及主流越南银行
