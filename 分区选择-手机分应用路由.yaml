@@ -547,6 +547,14 @@ rules:
 
   # --- 1. 🇻🇳 越南专属服务 (分流到越南组) ---
   # 包含 Zalo, Zalopay, Grab, Shopee VN, 以及主流越南银行
+  - DOMAIN-SUFFIX,vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,zalo.me,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,zalo,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,shopee.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,lazada.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,zing.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,vng.com.vn,越南服务
+  - DOMAIN-SUFFIX,tiktok.com.vn,🇻🇳 越南服务
   - PROCESS-NAME,com.zing.zalo,🇻🇳 越南服务
   - PROCESS-NAME,vn.com.vng.zalopay,🇻🇳 越南服务
   - PROCESS-NAME,com.grabtaxi.passenger,🇻🇳 越南服务
