@@ -83,6 +83,17 @@ xlClassical.forEach(name => {
 
 // 规则配置
 const rules = [
+  // --- 新增：越南服务相关的域名和关键字分流 ---
+  "DOMAIN-SUFFIX,vn,越南服务",             // 匹配所有 .vn 结尾的越南域名
+  "DOMAIN-SUFFIX,zalo.me,越南服务",        // 越南微信 Zalo
+  "DOMAIN-KEYWORD,zalo,越南服务",          // 包含 zalo 的域名
+  "DOMAIN-SUFFIX,shopee.vn,越南服务",      // 越南虾皮
+  "DOMAIN-SUFFIX,lazada.vn,越南服务",      // 越南Lazada
+  "DOMAIN-SUFFIX,zing.vn,越南服务",        // 越南Zing
+  "DOMAIN-SUFFIX,vng.com.vn,越南服务",     // 越南VNG游戏/娱乐
+  "DOMAIN-SUFFIX,tiktok.com.vn,越南服务",  // 越南TikTok节点补充
+  // ------------------------------------------
+
   "DOMAIN-SUFFIX,googleapis.cn,节点选择", 
   "DOMAIN-SUFFIX,gstatic.com,节点选择", 
   "DOMAIN-SUFFIX,xn--ngstr-lra8j.com,节点选择", 
@@ -109,6 +120,10 @@ const rules = [
   "RULE-SET,cncidr,全局直连,no-resolve",
   "RULE-SET,telegramcidr,电报消息,no-resolve",
   "GEOSITE,CN,全局直连",
+
+  // 越南IP兜底规则（如果上面的域名没匹配到，但是IP在越南，也走越南服务）
+  "GEOIP,VN,越南服务,no-resolve",
+
   "GEOIP,LAN,全局直连,no-resolve",
   "GEOIP,CN,全局直连,no-resolve",
   "MATCH,漏网之鱼"
@@ -165,6 +180,15 @@ function main(config) {
       ], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
     },
+
+    // ---> 新增：越南服务 策略组 <---
+    {
+      ...groupBaseOption, "name": "越南服务", "type": "select", "include-all": false,
+      "proxies": commonProxies, // 这里使用了包含所有地区节点的通用列表，方便您自由选择
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/map.svg"
+    },
+    // ---------------------------------
+
     {
       ...groupBaseOption, "name": "谷歌服务", "type": "select", "include-all": false,
       "proxies": commonProxies,
