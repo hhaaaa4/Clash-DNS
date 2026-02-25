@@ -553,7 +553,7 @@ rules:
   - DOMAIN-SUFFIX,shopee.vn,🇻🇳 越南服务
   - DOMAIN-SUFFIX,lazada.vn,🇻🇳 越南服务
   - DOMAIN-SUFFIX,zing.vn,🇻🇳 越南服务
-  - DOMAIN-SUFFIX,vng.com.vn,越南服务
+  - DOMAIN-SUFFIX,vng.com.vn,🇻🇳 越南服务
   - DOMAIN-SUFFIX,tiktok.com.vn,🇻🇳 越南服务
   - PROCESS-NAME,com.zing.zalo,🇻🇳 越南服务
   - PROCESS-NAME,vn.com.vng.zalopay,🇻🇳 越南服务
