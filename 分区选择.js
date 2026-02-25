@@ -95,8 +95,8 @@ const rules = [
   "RULE-SET,icloud,微软服务",
   "RULE-SET,apple,苹果服务",
   "RULE-SET,YouTube,YouTube",
-  "RULE-SET,Netflix,Netflix",
-  "RULE-SET,Spotify,Spotify",
+  "RULE-SET,Netflix,节点选择",
+  "RULE-SET,Spotify,节点选择",
   "RULE-SET,BilibiliHMT,哔哩哔哩港澳台",
   "RULE-SET,AI,AI",
   "RULE-SET,TikTok,TikTok",
@@ -123,7 +123,6 @@ const groupBaseOption = {
   "hidden": false
 };
 
-// 提取的公共节点和正则
 const commonProxies = ["节点选择", "美国-自动", "香港-自动", "台湾-自动", "新加坡-自动", "越南-自动", "全局直连"];
 const commonFilter = "^(?!.*(官网|套餐|流量|异常|剩余)).*$";
 
@@ -147,7 +146,7 @@ function main(config) {
       "type": "select", 
       "include-all": true, 
       "filter": commonFilter,
-      "proxies": ["美国-自动","香港-自动","台湾-自动","新加坡-自动","越南-自动","全局直连"],
+      "proxies": ["全局直连"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
     },
     {
@@ -165,14 +164,6 @@ function main(config) {
       "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg"
-    },
-    {
-      ...groupBaseOption, 
-      "name": "Netflix", 
-      "type": "select", 
-      "include-all": false,
-      "proxies": commonProxies,
-      "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/netflix.svg"
     },
     {
       ...groupBaseOption, 
@@ -219,16 +210,14 @@ function main(config) {
       "name": "哔哩哔哩港澳台", 
       "type": "select", 
       "include-all": false,
-      "proxies": ["全局直连","节点选择","台湾-自动","香港-自动"],
+      "proxies": ["全局直连","节点选择","台湾-自动","香港-自动"], 
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "Spotify", 
-      "type": "select", 
-      "include-all": false,
-      "proxies": commonProxies,
-      "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/spotify.svg"
+      // 💡 漏网之鱼已移动到哔哩哔哩之后
+      ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": true, "filter": commonFilter,
+      "proxies": ["节点选择","全局直连"],
+      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
     },
     {
       ...groupBaseOption, "name": "广告过滤", "type": "select",
@@ -236,8 +225,6 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"
     },
     {
-      // 💡 [重点修复]：解除了死循环！
-      // 移除了 "节点选择" 和 "include-all"，全局直连现在只包含 "DIRECT" 本身。
       ...groupBaseOption, "name": "全局直连", "type": "select", 
       "proxies": ["DIRECT"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
@@ -248,29 +235,24 @@ function main(config) {
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg"
     },
     {
-      ...groupBaseOption, "name": "美国-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      ...groupBaseOption, "name": "美国-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"
     },
     {
-      ...groupBaseOption, "name": "香港-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      ...groupBaseOption, "name": "香港-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
     },
     {
-      ...groupBaseOption, "name": "台湾-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      ...groupBaseOption, "name": "台湾-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$"
     },
     {
-      ...groupBaseOption, "name": "越南-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      ...groupBaseOption, "name": "越南-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
     },
     {
-      ...groupBaseOption, "name": "新加坡-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true,
+      ...groupBaseOption, "name": "新加坡-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
-    },
-    {
-      ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": true, "filter": commonFilter,
-      "proxies": ["节点选择","全局直连"],
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
     }
   ];
 
