@@ -409,6 +409,7 @@ proxy-groups:
 
   - name: HK AUTO
     type: url-test
+    hidden: true # 💡 已隐藏
     interval: 300
     timeout: 3000
     max-failed-times: 3
@@ -426,6 +427,7 @@ proxy-groups:
 
   - name: TW AUTO
     type: url-test
+    hidden: true # 💡 已隐藏
     interval: 300
     timeout: 3000
     max-failed-times: 3
@@ -443,6 +445,7 @@ proxy-groups:
 
   - name: SG AUTO
     type: url-test
+    hidden: true # 💡 已隐藏
     interval: 300
     timeout: 3000
     max-failed-times: 3
@@ -460,6 +463,7 @@ proxy-groups:
 
   - name: VN AUTO
     type: url-test
+    hidden: true # 💡 已隐藏
     interval: 300
     timeout: 3000
     max-failed-times: 3
@@ -477,6 +481,7 @@ proxy-groups:
 
   - name: JP AUTO
     type: url-test
+    hidden: true # 💡 已隐藏
     interval: 300
     timeout: 3000
     max-failed-times: 3
@@ -494,6 +499,7 @@ proxy-groups:
 
   - name: US AUTO
     type: url-test
+    hidden: true # 💡 已隐藏
     interval: 300
     timeout: 3000
     max-failed-times: 3
@@ -597,7 +603,7 @@ rules:
   - DOMAIN,v2rayse.com,🚀 节点选择
   
   # --- 4. 规则集匹配 (大数据列表) ---
-  - RULE-SET,private,全局直连      # 私有网络/局域网 -> 直连
+  - RULE-SET,private,全局直连       # 私有网络/局域网 -> 直连
   - RULE-SET,reject,广告过滤       # 广告域名 -> 拦截
   - RULE-SET,icloud,🍎 苹果服务    # iCloud -> 苹果服务
   - RULE-SET,apple,🍎 苹果服务     # 苹果其他 -> 苹果服务
