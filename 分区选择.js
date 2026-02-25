@@ -231,7 +231,7 @@ function main(config) {
     },
     {
       ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": false,
-      "proxies": ["节点选择", "香港节点", "台湾节点", "新加坡节点", "美国节点", "越南节点", "其他节点", "全局直连"],
+      "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
     },
     {
