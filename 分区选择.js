@@ -123,6 +123,7 @@ const groupBaseOption = {
   "hidden": false
 };
 
+// 在公共策略中加入了“其他节点”
 const commonProxies = [
   "节点选择", 
   "香港节点", "香港-自动", 
@@ -130,6 +131,7 @@ const commonProxies = [
   "新加坡节点", "新加坡-自动", 
   "美国节点", "美国-自动", 
   "越南节点", "越南-自动", 
+  "其他节点",
   "全局直连"
 ];
 
@@ -158,6 +160,7 @@ function main(config) {
         "新加坡节点", "新加坡-自动", 
         "美国节点", "美国-自动", 
         "越南节点", "越南-自动", 
+        "其他节点", // 加入节点选择中
         "全局直连"
       ], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
@@ -199,12 +202,12 @@ function main(config) {
     },
     {
       ...groupBaseOption, "name": "哔哩哔哩港澳台", "type": "select", "include-all": false,
-      "proxies": ["全局直连", "节点选择", "台湾节点", "香港节点", "台湾-自动", "香港-自动"], 
+      "proxies": ["全局直连", "节点选择", "台湾节点", "香港节点", "台湾-自动", "香港-自动", "其他节点"], 
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg"
     },
     {
       ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": false,
-      "proxies": ["节点选择", "香港节点", "台湾节点", "新加坡节点", "美国节点", "越南节点", "全局直连"],
+      "proxies": ["节点选择", "香港节点", "台湾节点", "新加坡节点", "美国节点", "越南节点", "其他节点", "全局直连"],
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
     },
     {
@@ -243,6 +246,11 @@ function main(config) {
     {
       ...groupBaseOption, "name": "越南节点", "type": "select", "include-all": true, 
       "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
+    },
+    {
+      // 新增的“其他节点”组，排除了所有已有地区及无效关键字
+      ...groupBaseOption, "name": "其他节点", "type": "select", "include-all": true, 
+      "filter": "^(?!.*(官网|套餐|流量|异常|剩余|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States|越|越南|VN|vn|vietnam|胡|河内)).*$"
     },
 
     // --- 自动分组 ---
