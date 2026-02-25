@@ -123,8 +123,15 @@ const groupBaseOption = {
   "hidden": false
 };
 
-const commonProxies = ["节点选择", "美国-自动", "香港-自动", "台湾-自动", "新加坡-自动", "越南-自动", "全局直连"];
-const commonFilter = "^(?!.*(官网|套餐|流量|异常|剩余)).*$";
+const commonProxies = [
+  "节点选择", 
+  "香港节点", "香港-自动", 
+  "台湾节点", "台湾-自动", 
+  "新加坡节点", "新加坡-自动", 
+  "美国节点", "美国-自动", 
+  "越南节点", "越南-自动", 
+  "全局直连"
+];
 
 // 程序入口
 function main(config) {
@@ -144,79 +151,60 @@ function main(config) {
       ...groupBaseOption, 
       "name": "节点选择", 
       "type": "select", 
-      "include-all": true, 
-      "filter": commonFilter,
-      "proxies": ["全局直连"], 
+      "include-all": false,
+      "proxies": [
+        "香港节点", "香港-自动", 
+        "台湾节点", "台湾-自动", 
+        "新加坡节点", "新加坡-自动", 
+        "美国节点", "美国-自动", 
+        "越南节点", "越南-自动", 
+        "全局直连"
+      ], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "谷歌服务", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "谷歌服务", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "YouTube", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "YouTube", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "电报消息", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "电报消息", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "AI", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "AI", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "TikTok", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "TikTok", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "微软服务", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "微软服务", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "苹果服务", 
-      "type": "select", 
-      "include-all": false,
+      ...groupBaseOption, "name": "苹果服务", "type": "select", "include-all": false,
       "proxies": commonProxies,
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg"
     },
     {
-      ...groupBaseOption, 
-      "name": "哔哩哔哩港澳台", 
-      "type": "select", 
-      "include-all": false,
-      "proxies": ["全局直连","节点选择","台湾-自动","香港-自动"], 
+      ...groupBaseOption, "name": "哔哩哔哩港澳台", "type": "select", "include-all": false,
+      "proxies": ["全局直连", "节点选择", "台湾节点", "香港节点", "台湾-自动", "香港-自动"], 
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg"
     },
     {
-      // 💡 漏网之鱼已移动到哔哩哔哩之后
-      ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": true, "filter": commonFilter,
-      "proxies": ["节点选择","全局直连"],
+      ...groupBaseOption, "name": "漏网之鱼", "type": "select", "include-all": false,
+      "proxies": ["节点选择", "香港节点", "台湾节点", "新加坡节点", "美国节点", "越南节点", "全局直连"],
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
     },
     {
@@ -234,10 +222,30 @@ function main(config) {
       "proxies": ["REJECT", "DIRECT"],
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg"
     },
+
+    // --- 手动分地区节点组 ---
     {
-      ...groupBaseOption, "name": "美国-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
+      ...groupBaseOption, "name": "香港节点", "type": "select", "include-all": true, 
+      "filter": "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "台湾节点", "type": "select", "include-all": true, 
+      "filter": "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "新加坡节点", "type": "select", "include-all": true, 
+      "filter": "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "美国节点", "type": "select", "include-all": true, 
       "filter": "(?=.*(广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"
     },
+    {
+      ...groupBaseOption, "name": "越南节点", "type": "select", "include-all": true, 
+      "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
+    },
+
+    // --- 自动分组 ---
     {
       ...groupBaseOption, "name": "香港-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
@@ -247,12 +255,16 @@ function main(config) {
       "filter": "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$"
     },
     {
-      ...groupBaseOption, "name": "越南-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
-      "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
-    },
-    {
       ...groupBaseOption, "name": "新加坡-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
       "filter": "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "美国-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
+      "filter": "(?=.*(广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"
+    },
+    {
+      ...groupBaseOption, "name": "越南-自动", "type": "url-test", "interval": 120, "tolerance": 200, "include-all": true, "hidden": true, 
+      "filter": "(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$"
     }
   ];
 
