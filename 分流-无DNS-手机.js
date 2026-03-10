@@ -34,12 +34,12 @@ const ruleProviders = {
 // ===================================================
 const rules = [
   // --- 1. 局域网与私有网络 (最高优先级) ---
-  "RULE-SET,applications,全局直连",
-  "RULE-SET,private,全局直连",
-  "RULE-SET,lancidr,全局直连,no-resolve",
+  "RULE-SET,applications,🔗 全局直连", // 修复：应用了统一格式的 Emoji
+  "RULE-SET,private,🔗 全局直连",
+  "RULE-SET,lancidr,🔗 全局直连,no-resolve",
   
   // --- 2. 广告拦截 ---
-  "RULE-SET,reject,广告过滤",
+  "RULE-SET,reject,🛡️ 广告过滤", // 修复：对齐了底部的分组名称
   
   // --- 3. 用户自定义与精准域名 ---
   "DOMAIN-SUFFIX,vn,🇻🇳 越南服务",
@@ -98,15 +98,16 @@ const groupBaseOption = {
   "max-failed-times": 3
 };
 
+// ⚠️ 修复核心：补全了带 Emoji 的组名，使其与下面生成的策略组名称完全一致
 const commonProxies = [
-  "节点选择", 
+  "🚀 节点选择", 
   "香港节点", "香港-自动", 
   "台湾节点", "台湾-自动", 
   "新加坡节点", "新加坡-自动", 
   "美国节点", "美国-自动", 
   "越南节点", "越南-自动", 
   "其他节点",
-  "全局直连"
+  "🔗 全局直连"
 ];
 
 // ===================================================
@@ -123,7 +124,7 @@ function main(config) {
       ...groupBaseOption, 
       "name": "🚀 节点选择", 
       "type": "select", 
-      "proxies": ["香港节点", "香港-自动", "台湾节点", "台湾-自动", "新加坡节点", "新加坡-自动", "美国节点", "美国-自动", "越南节点", "越南-自动", "其他节点", "全局直连"], 
+      "proxies": ["香港节点", "香港-自动", "台湾节点", "台湾-自动", "新加坡节点", "新加坡-自动", "美国节点", "美国-自动", "越南节点", "越南-自动", "其他节点", "🔗 全局直连"], // 这里也同步修复了全局直连
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
     },
     { ...groupBaseOption, "name": "🇻🇳 越南服务", "type": "select", "proxies": commonProxies, "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/330px-Flag_of_Vietnam.svg.png" },
@@ -138,7 +139,8 @@ function main(config) {
       ...groupBaseOption, 
       "name": "📺 哔哩哔哩港澳台", 
       "type": "select", 
-      "proxies": ["全局直连", "节点选择", "台湾节点", "香港节点", "台湾-自动", "香港-自动", "其他节点"], 
+      // ⚠️ 修复核心：这里也补全了小火箭和链接图标
+      "proxies": ["🔗 全局直连", "🚀 节点选择", "台湾节点", "香港节点", "台湾-自动", "香港-自动", "其他节点"], 
       "icon": "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg" 
     },
     { ...groupBaseOption, "name": "🐟 漏网之鱼", "type": "select", "proxies": commonProxies, "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg" },
