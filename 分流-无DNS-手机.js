@@ -126,7 +126,7 @@ function main(config) {
       "proxies": ["香港节点", "香港-自动", "台湾节点", "台湾-自动", "新加坡节点", "新加坡-自动", "美国节点", "美国-自动", "越南节点", "越南-自动", "其他节点", "全局直连"], 
       "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
     },
-    { ...groupBaseOption, "name": "🇻🇳 越南服务", "type": "select", "proxies": commonProxies, "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/map.svg" },
+    { ...groupBaseOption, "name": "🇻🇳 越南服务", "type": "select", "proxies": commonProxies, "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/330px-Flag_of_Vietnam.svg.png" },
     { ...groupBaseOption, "name": "🔍 谷歌服务", "type": "select", "proxies": commonProxies, "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg" },
     { ...groupBaseOption, "name": "▶️ YouTube", "type": "select", "proxies": commonProxies, "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg" },
     { ...groupBaseOption, "name": "📲 电报消息", "type": "select", "proxies": commonProxies, "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg" },
