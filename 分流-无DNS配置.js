@@ -171,7 +171,7 @@ function main(config) {
     {
       ...groupBaseOption, "name": "越南服务", "type": "select", "include-all": false,
       "proxies": commonProxies, 
-      "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/map.svg"
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/330px-Flag_of_Vietnam.svg.png"
     },
     {
       ...groupBaseOption, "name": "谷歌服务", "type": "select", "include-all": false,
