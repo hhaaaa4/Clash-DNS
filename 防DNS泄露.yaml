@@ -1,83 +1,83 @@
 # =========================================================
-# Mihomo 终极大一统引擎 (PC/手机通用 - 完美体检修复版)
-# 核心优势：全图标UI、应用包名匹配、mrs极速规则、UI接管开关
+# Mihomo 终极大一统引擎 (逻辑修正完美版)
+# 修复内容：拆分 GEOSITE 复合规则，解决数据库读取失败问题
 # =========================================================
 
 # --- 1. 全局基础设置 ---
-bind-address: "0.0.0.0"         # 允许局域网连接
-mixed-port: 7890                # 混合端口
-unified-delay: true             # 真实延迟显示
-find-process-mode: strict       # 严格进程识别（应用分流核心）
-global-client-fingerprint: random # 随机 TLS 指纹（防封锁关键）
-tcp-concurrent: true            # 并发连接，加速网页打开
+bind-address: "0.0.0.0"         
+mixed-port: 7890                
+unified-delay: true             
+find-process-mode: strict       
+global-client-fingerprint: random 
+tcp-concurrent: true            
 keep-alive-idle: 600            
-keep-alive-interval: 15         # 15秒心跳包（防 Zalo/TG 掉线）
+keep-alive-interval: 15         
 
 # --- 2. 缓存与 GEO 数据库更新 ---
 profile:
-  store-selected: true          # 记忆节点选择
-  store-fake-ip: true           # 记忆假 IP
+  store-selected: true          
+  store-fake-ip: true           
 
 geodata-mode: true
 geo-auto-update: true
-geo-update-interval: 24         # 每24小时更新一次 IP 库
+geo-update-interval: 24         
 geox-url:
   geoip: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
   geosite: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
   mmdb: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.metadb
 
-lan-allowed-ips:                # 局域网访问白名单
+lan-allowed-ips:                
   - 0.0.0.0/0
   - ::/0
   - 127.0.0.1/8
 
-# --- 3. TUN 虚拟网卡设置 (✅ 默认不写 enable，由软件界面开关控制) ---
+# --- 3. TUN 虚拟网卡设置 (由软件界面控制开关) ---
 tun:
-  stack: mixed                  # 混合模式（性能与兼容并重）
-  strict-route: true            # 严格路由防漏
+  stack: mixed                  
+  strict-route: true            
   dns-hijack: ["any:53", "tcp://any:53"] 
   mtu: 1500                     
   auto-route: true              
   auto-detect-interface: true   
 
-# --- 4. 核心 DNS 防污染设置 (极致秒开) ---
+# --- 4. 核心 DNS 防污染设置 ---
 dns:
   enable: true                  
-  cache-algorithm: arc          # 极速 DNS 缓存算法
+  cache-algorithm: arc          
   listen: 0.0.0.0:1053          
-  respect-rules: true           # 严格遵守分流规则解析
+  respect-rules: true           
   use-hosts: true               
   use-system-hosts: true        
-  enhanced-mode: fake-ip        # Fake-IP 秒开模式
+  enhanced-mode: fake-ip        
   fake-ip-range: 198.18.0.1/16  
   fake-ip-filter-mode: blacklist 
   fake-ip-filter:               
-    - rule-set:fakeipfilter     # 引用黑名单
-    - +.gov.vn                  # 越南政务网直连解析
+    - rule-set:fakeipfilter     
+    - +.gov.vn                  
     - +.lan
     - +.local
   
-  default-nameserver:           # 引导 DNS
+  default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
   
-  nameserver:                   # 远程加密 DNS
+  nameserver:
     - https://1.1.1.1/dns-query
     - https://8.8.8.8/dns-query
   
-  proxy-server-nameserver:      # 节点域名解析
+  proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://doh.pub/dns-query
   
   nameserver-policy:
-    "geosite:cn,private":       # 国内域名查阿里/腾讯 DNS
+    "geosite:cn,private":       
       - https://223.5.5.5/dns-query
       - https://doh.pub/dns-query
 
 # --- 5. 域名嗅探器 ---
 sniffer:
   enable: true                  
-  parse-pure-ip: true           # 扒开 IP 查域名
+  parse-pure-ip: true           
   sniff:
     HTTP:
       ports: [80, 8080-8880]
@@ -90,7 +90,6 @@ sniffer:
     - "Mijia Cloud"             
     - "+.push.apple.com"        
   skip-dst-address:
-    # Telegram 直连 IP 段过滤，防转圈
     - 91.105.192.0/23
     - 91.108.4.0/22
     - 91.108.8.0/21
@@ -101,10 +100,9 @@ sniffer:
     - 185.76.151.0/24
 
 # --- 6. 内置节点 ---
-# ✅ 已彻底修复：此处留空，防止与内核自带的 DIRECT/REJECT 冲突
 proxies: []
 
-# --- 7. 地区筛选正则 (根据名称自动分类) ---
+# --- 7. 地区筛选正则 ---
 FilterHK: &FilterHK '(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$'
 FilterTW: &FilterTW '(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$'
 FilterSG: &FilterSG '(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$'
@@ -153,10 +151,12 @@ proxy-groups:
 
 # --- 10. 路由规则 (网络交警) ---
 rules:
+  # ✅ 已修复：拆分了逻辑组合，解决 "list youtube|google not found" 报错
+  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube)),REJECT 
+  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,google)),REJECT 
+  
   # NTP 强制直连
   - DST-PORT,123,🔗 全局直连                                      
-  # 阻断 QUIC 防止 YouTube 在越南网络缓冲转圈
-  - AND,((NETWORK,UDP),(DST-PORT,443),(GEOSITE,youtube|google)),REJECT 
   - DOMAIN-KEYWORD,jspoo,🔗 全局直连
 
   # 黑洞拦截与基础放行
