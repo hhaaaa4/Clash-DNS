@@ -121,7 +121,7 @@ proxy-groups:
       - 中国-自动
       - 中国节点
     include-all: true
-    icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/map.svg"
+    icon: "https://media.istockphoto.com/id/1409691380/zh/%E5%90%91%E9%87%8F/national-flag-of-china.jpg?s=612x612&w=0&k=20&c=6dXlBiBJYKMiay3K9H5-zJdXi5tBxonFp5xYZm8Ft6U="
 
   # 未匹配到任何规则的流量，默认走这里
   - name: 漏网之鱼
