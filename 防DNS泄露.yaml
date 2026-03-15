@@ -1,3 +1,35 @@
+# --- 指纹与防封锁 ---
+global-client-fingerprint: chrome
+
+# --- 状态持久化记忆 ---
+profile:
+  store-selected: true # 记忆你手动切换的节点
+  store-fake-ip: true  # 记忆 DNS 缓存，重启后秒连
+
+# --- Geo 数据库每周自动更新 ---
+geo-auto-update: true
+geo-update-interval: 24 # 每 24 小时自动更新一次
+
+# --- TCP 并发与嗅探 ---
+tcp-concurrent: true
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
+# --- TUN 模式参数保留 (开关由软件界面控制) ---
+tun:
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+
 # ================= 1. DNS 配置 =================
 dns:
   enable: true
@@ -23,11 +55,21 @@ dns:
     - "localhost.work.weixin.qq.com"
   default-nameserver:
     - 223.5.5.5
-    - 1.1.1.1
+    - 119.29.29.29
+  # 主 DNS：负责国内及常规域名（解析快）
   nameserver:
+    - https://223.5.5.5/dns-query
+    - https://doh.pub/dns-query
+  # 回退 DNS：当主 DNS 解析出海外 IP 时，用这里的安全 DNS 重新解析（防污染）
+  fallback:
     - https://1.1.1.1/dns-query
     - https://8.8.8.8/dns-query
     - https://208.67.222.222/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
   proxy-server-nameserver:
     - https://223.5.5.5/dns-query
     - https://doh.pub/dns-query
@@ -67,6 +109,16 @@ proxy-groups:
       - 中国节点
     include-all: true
     icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/map.svg"
+
+  - name: 漏网之鱼
+    type: select
+    proxies:
+      - 节点选择
+      - 全局直连
+      - 自动选择
+    include-all: true
+    filter: "^(?!.*(官网|套餐|流量|异常|剩余|到期|过期|更新|联系|群|VIP)).*$"
+    icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
 
   # --- 媒体与服务分类组 ---
   - name: 谷歌服务
@@ -238,15 +290,17 @@ proxy-groups:
       - DIRECT
     icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/block.svg"
 
+  # ================= 【已隐藏】后台自动测速组 =================
   - name: 自动选择
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "^(?!.*(官网|套餐|流量|异常|剩余|到期|过期|更新|联系|群|VIP)).*$"
     icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/speed.svg"
 
-  # --- 各地区展开（测速与手动组）---
+  # --- 地区手动与隐藏自动组 ---
   - name: 香港节点
     type: select
     include-all: true
@@ -255,6 +309,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广港|香港|HK|Hong Kong|🇭🇰|HongKong)"
 
@@ -266,6 +321,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广台|台湾|台灣|TW|Tai Wan|🇹🇼|TaiWan|Taiwan)"
 
@@ -277,6 +333,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan)"
 
@@ -288,6 +345,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)"
 
@@ -299,6 +357,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)"
 
@@ -310,6 +369,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)"
 
@@ -321,6 +381,7 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(越南|VN|Vietnam|Ho Chi Minh|🇻🇳)"
 
@@ -332,168 +393,175 @@ proxy-groups:
     type: url-test
     interval: 120
     tolerance: 50
+    hidden: true
     include-all: true
     filter: "(?i)(广中|中国|CN|China|上海|北京|广州|深圳|江苏|浙江|🇨🇳)"
-
-  - name: 漏网之鱼
-    type: select
-    proxies:
-      - 节点选择
-      - 全局直连
-      - 自动选择
-    include-all: true
-    filter: "^(?!.*(官网|套餐|流量|异常|剩余|到期|过期|更新|联系|群|VIP)).*$"
-    icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
 
 # ================= 3. 规则提供者 (Rule Providers) =================
 rule-providers:
   reject:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
     path: "./ruleset/loyalsoldier/reject.yaml"
   icloud:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
     path: "./ruleset/loyalsoldier/icloud.yaml"
   apple:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
     path: "./ruleset/loyalsoldier/apple.yaml"
   google:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
     path: "./ruleset/loyalsoldier/google.yaml"
   proxy:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
     path: "./ruleset/loyalsoldier/proxy.yaml"
   direct:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
     path: "./ruleset/loyalsoldier/direct.yaml"
   private:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
     path: "./ruleset/loyalsoldier/private.yaml"
   gfw:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
     path: "./ruleset/loyalsoldier/gfw.yaml"
   tld-not-cn:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: domain
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
     path: "./ruleset/loyalsoldier/tld-not-cn.yaml"
   telegramcidr:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: ipcidr
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
     path: "./ruleset/loyalsoldier/telegramcidr.yaml"
   cncidr:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: ipcidr
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
     path: "./ruleset/loyalsoldier/cncidr.yaml"
   lancidr:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: ipcidr
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
     path: "./ruleset/loyalsoldier/lancidr.yaml"
   applications:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
     path: "./ruleset/loyalsoldier/applications.yaml"
   bahamut:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Bahamut.txt"
     path: "./ruleset/xiaolin-007/bahamut.yaml"
   YouTube:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/YouTube.txt"
     path: "./ruleset/xiaolin-007/YouTube.yaml"
   Netflix:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Netflix.txt"
     path: "./ruleset/xiaolin-007/Netflix.yaml"
   Spotify:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/Spotify.txt"
     path: "./ruleset/xiaolin-007/Spotify.yaml"
   BilibiliHMT:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/BilibiliHMT.txt"
     path: "./ruleset/xiaolin-007/BilibiliHMT.yaml"
   AI:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/AI.txt"
     path: "./ruleset/xiaolin-007/AI.yaml"
   TikTok:
     type: http
     format: yaml
-    interval: 86400
+    interval: 10800
     behavior: classical
     url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/TikTok.txt"
     path: "./ruleset/xiaolin-007/TikTok.yaml"
 
 # ================= 4. 路由规则 (Rules) =================
 rules:
+  # --- 1. 防 BT 下载封号与常用下载器全局直连保护 ---
+  - "PROCESS-NAME,aria2c,DIRECT"
+  - "PROCESS-NAME,BitComet,DIRECT"
+  - "PROCESS-NAME,qBittorrent,DIRECT"
+  - "PROCESS-NAME,Transmission,DIRECT"
+  - "PROCESS-NAME,utorrent,DIRECT"
+  - "PROCESS-NAME,Thunder,DIRECT"
+  - "PROCESS-NAME,Xunlei,DIRECT"
+  - "PORT,6881-6889,DIRECT"
+  - "PORT,51413,DIRECT"
+  
+  # --- 2. 局域网与地区直连 ---
   - "RULE-SET,lancidr,全局直连,no-resolve"
   - "GEOIP,LAN,全局直连,no-resolve"
   - "GEOIP,VN,全局直连,no-resolve"
+  
+  # --- 3. 广告拦截 ---
   - "RULE-SET,reject,广告过滤"
+  
+  # --- 4. 自定义域名直连与特定服务分配 ---
   - "DOMAIN-SUFFIX,googleapis.cn,节点选择"
   - "DOMAIN-SUFFIX,gstatic.com,节点选择"
   - "DOMAIN-SUFFIX,xn--ngstr-lra8j.com,节点选择"
@@ -510,13 +578,19 @@ rules:
   - "RULE-SET,TikTok,TikTok"
   - "RULE-SET,google,谷歌服务"
   - "RULE-SET,telegramcidr,电报消息,no-resolve"
+  
+  # --- 5. 国内服务控制 ---
   - "RULE-SET,cncidr,国内服务,no-resolve"
   - "GEOSITE,CN,国内服务"
   - "GEOIP,CN,国内服务,no-resolve"
+  
+  # --- 6. 兜底代理规则 ---
   - "RULE-SET,proxy,节点选择"
   - "RULE-SET,gfw,节点选择"
   - "RULE-SET,tld-not-cn,节点选择"
   - "RULE-SET,applications,全局直连"
   - "RULE-SET,private,全局直连"
   - "RULE-SET,direct,全局直连"
+  
+  # --- 7. 最终匹配 ---
   - "MATCH,漏网之鱼"
