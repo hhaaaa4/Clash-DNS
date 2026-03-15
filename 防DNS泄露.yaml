@@ -76,7 +76,7 @@ dns:
 
 # ================= 2. 代理策略组配置 =================
 proxy-groups:
-  # --- 1. 核心入口区 (只允许包含底层节点组，禁止包含其他分流策略组) ---
+  # --- 1. 核心入口区 ---
   - name: 节点选择
     type: select
     proxies:
@@ -96,20 +96,20 @@ proxy-groups:
       - 韩国节点
       - 越南-自动
       - 越南节点
-      - 中国-自动
-      - 中国节点
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
 
-  # --- 2. 越南服务 (修复点：使用 DIRECT 代替 全局直连 组) ---
+  # --- 2. 越南服务：保留新加坡作为东南亚备份 ---
   - name: 越南服务
     type: select
     proxies:
       - DIRECT
       - 越南-自动
       - 越南节点
+      - 新加坡-自动
+      - 新加坡节点
     icon: "https://flagcdn.com/w320/vn.png" 
 
-  # --- 3. 国内服务 (修复点：使用 DIRECT 代替 全局直连 组) ---
+  # --- 3. 国内服务 ---
   - name: 国内服务
     type: select
     proxies:
@@ -127,20 +127,20 @@ proxy-groups:
       - DIRECT
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
 
-  # --- 5. 媒体分类 (内部修复 DIRECT 引用) ---
+  # --- 5. 媒体与分类服务 (仅包含组) ---
   - name: 谷歌服务
     type: select
-    proxies: [节点选择, 自动选择, DIRECT]
+    proxies: [节点选择, 自动选择, 越南服务, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg"
 
   - name: YouTube
     type: select
-    proxies: [自动选择, 节点选择, 香港-自动, 美国-自动, DIRECT]
+    proxies: [自动选择, 节点选择, 越南服务, 香港-自动, 美国-自动, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg"
 
   - name: Netflix
     type: select
-    proxies: [自动选择, 节点选择, 美国-自动, 香港-自动, DIRECT]
+    proxies: [自动选择, 节点选择, 越南服务, 美国-自动, 香港-自动, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/xiaolin-007/clash@main/icon/netflix.svg"
 
   - name: AI
@@ -150,7 +150,7 @@ proxy-groups:
 
   - name: 电报消息
     type: select
-    proxies: [节点选择, 自动选择, 香港-自动, DIRECT]
+    proxies: [节点选择, 自动选择, 越南服务, 香港-自动, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg"
 
   - name: 微软服务
@@ -175,7 +175,7 @@ proxy-groups:
 
   - name: Spotify
     type: select
-    proxies: [自动选择, 节点选择, DIRECT]
+    proxies: [自动选择, 节点选择, 越南服务, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/xiaolin-007/clash@main/icon/spotify.svg"
 
   # --- 6. 功能组 ---
@@ -186,10 +186,10 @@ proxy-groups:
 
   - name: 全局直连
     type: select
-    proxies: [DIRECT] # 修复：全局直连组不再包含节点选择，仅作为纯粹的直连开关
+    proxies: [DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
 
-  # --- 7. 底层隐藏组 (测速与节点提取) ---
+  # --- 7. 底层隐藏组 ---
   - name: 自动选择
     type: url-test
     interval: 120
