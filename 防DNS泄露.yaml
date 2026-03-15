@@ -468,8 +468,7 @@ proxy-groups:
     hidden: true
     include-all: true
     filter: "(?i)(广中|中国|CN|China|上海|北京|广州|深圳|江苏|浙江|🇨🇳)"
-    icon: "https://flagcdn.com/w320/cn.png"
-
+    
 # ================= 3. 规则提供者 (Rule Providers) =================
 rule-providers:
   reject:
