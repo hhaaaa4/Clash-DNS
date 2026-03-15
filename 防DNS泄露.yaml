@@ -1,5 +1,5 @@
 # =========================================================
-# Mihomo 终极大一统引擎 (PC/手机通用 + 全详尽注释版)
+# Mihomo (PC/手机通用+详尽注释)
 # 核心优势：最优防漏、Fake-IP秒开、全图标UI、应用包名精准匹配、省电
 # =========================================================
 
@@ -21,7 +21,7 @@ profile:
 # 【GEO 数据库自动更新】用于精准判断 IP 与域名是国内还是国外
 geodata-mode: true              # 开启 GEO 数据模式
 geo-auto-update: true           # 允许自动更新
-geo-update-interval: 24         # 每 24 小时在后台默默更新一次
+geo-update-interval: 3         # 每 3 小时在后台默默更新一次
 geox-url:
   # 使用 jsdelivr CDN 加速下载 IP 数据库，防止在越南或国内网络下更新失败报错
   geoip: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
