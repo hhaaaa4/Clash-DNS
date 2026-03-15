@@ -24,7 +24,7 @@ sniffer:
     QUIC:
       ports: [443, 8443]
 
-# --- TUN 模式 (虚拟网卡参数保留，开关由软件控制) ---
+# --- TUN 模式参数保留 (开关由软件控制) ---
 tun:
   stack: mixed 
   auto-route: true 
@@ -76,7 +76,7 @@ dns:
 
 # ================= 2. 代理策略组配置 =================
 proxy-groups:
-  # --- 1. 核心入口：只保留各地区分组，不再出现单个节点，极致简洁 ---
+  # --- 1. 核心入口区 (只允许包含底层节点组，禁止包含其他分流策略组) ---
   - name: 节点选择
     type: select
     proxies:
@@ -96,9 +96,11 @@ proxy-groups:
       - 韩国节点
       - 越南-自动
       - 越南节点
+      - 中国-自动
+      - 中国节点
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"
 
-  # --- 2. 越南服务：人在越南时，默认选 DIRECT (直连) 体验最好 ---
+  # --- 2. 越南服务 (修复点：使用 DIRECT 代替 全局直连 组) ---
   - name: 越南服务
     type: select
     proxies:
@@ -107,7 +109,7 @@ proxy-groups:
       - 越南节点
     icon: "https://flagcdn.com/w320/vn.png" 
 
-  # --- 3. 国内服务：人在越南时，可切到“中国-自动”实现翻墙回国 ---
+  # --- 3. 国内服务 (修复点：使用 DIRECT 代替 全局直连 组) ---
   - name: 国内服务
     type: select
     proxies:
@@ -125,15 +127,15 @@ proxy-groups:
       - DIRECT
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"
 
-  # --- 5. 媒体与分类服务 (仅包含组，不显示节点) ---
+  # --- 5. 媒体分类 (内部修复 DIRECT 引用) ---
   - name: 谷歌服务
     type: select
-    proxies: [节点选择, 自动选择, 越南服务, DIRECT]
+    proxies: [节点选择, 自动选择, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg"
 
   - name: YouTube
     type: select
-    proxies: [自动选择, 节点选择, 越南服务, 香港-自动, 美国-自动, DIRECT]
+    proxies: [自动选择, 节点选择, 香港-自动, 美国-自动, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg"
 
   - name: Netflix
@@ -151,12 +153,43 @@ proxy-groups:
     proxies: [节点选择, 自动选择, 香港-自动, DIRECT]
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg"
 
-  # --- 6. 功能性与隐藏组 (底层测速及手动展开) ---
+  - name: 微软服务
+    type: select
+    proxies: [DIRECT, 节点选择]
+    icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg"
+
+  - name: 苹果服务
+    type: select
+    proxies: [节点选择, 自动选择, DIRECT]
+    icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg"
+
+  - name: 动画疯
+    type: select
+    proxies: [台湾-自动, 台湾节点, 节点选择]
+    icon: "https://testingcf.jsdelivr.net/gh/xiaolin-007/clash@main/icon/Bahamut.svg"
+
+  - name: 哔哩哔哩港澳台
+    type: select
+    proxies: [DIRECT, 香港-自动, 香港节点, 台湾-自动, 台湾节点, 节点选择]
+    icon: "https://testingcf.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg"
+
+  - name: Spotify
+    type: select
+    proxies: [自动选择, 节点选择, DIRECT]
+    icon: "https://testingcf.jsdelivr.net/gh/xiaolin-007/clash@main/icon/spotify.svg"
+
+  # --- 6. 功能组 ---
+  - name: 广告过滤
+    type: select
+    proxies: [REJECT, DIRECT]
+    icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"
+
   - name: 全局直连
     type: select
-    proxies: [DIRECT, 自动选择]
+    proxies: [DIRECT] # 修复：全局直连组不再包含节点选择，仅作为纯粹的直连开关
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"
 
+  # --- 7. 底层隐藏组 (测速与节点提取) ---
   - name: 自动选择
     type: url-test
     interval: 120
@@ -166,7 +199,6 @@ proxy-groups:
     filter: "^(?!.*(官网|套餐|流量|异常|剩余|到期|过期|更新|联系|群|VIP)).*$"
     icon: "https://testingcf.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/speed.svg"
 
-  # --- 各地区隐藏测速组与手动节点组 ---
   - name: 香港节点
     type: select
     include-all: true
@@ -254,7 +286,7 @@ proxy-groups:
   - name: 越南节点
     type: select
     include-all: true
-    filter: "(?i)(越南|VN|Vietnam|Ho Chi Minh|🇻🇳)"
+    filter: "(?i)(越南|VN|Vietnam|Ho Chi Minh|HoChiMinh|🇻🇳)"
     icon: "https://flagcdn.com/w320/vn.png"
   - name: 越南-自动
     type: url-test
@@ -262,7 +294,7 @@ proxy-groups:
     tolerance: 50
     hidden: true
     include-all: true
-    filter: "(?i)(越南|VN|Vietnam|Ho Chi Minh|🇻🇳)"
+    filter: "(?i)(越南|VN|Vietnam|Ho Chi Minh|HoChiMinh|🇻🇳)"
     icon: "https://flagcdn.com/w320/vn.png"
 
   - name: 中国节点
@@ -374,14 +406,14 @@ rules:
   - "DST-PORT,6881-6889,DIRECT"
   - "RULE-SET,lancidr,DIRECT,no-resolve"
   - "GEOIP,LAN,DIRECT,no-resolve"
-  - "GEOIP,VN,越南服务,no-resolve" # 越南流量交由越南服务组
+  - "GEOIP,VN,越南服务,no-resolve" 
   - "RULE-SET,reject,广告过滤"
   - "RULE-SET,YouTube,YouTube"
   - "RULE-SET,Netflix,Netflix"
   - "RULE-SET,AI,AI"
   - "RULE-SET,google,谷歌服务"
   - "RULE-SET,telegramcidr,电报消息,no-resolve"
-  - "RULE-SET,cncidr,国内服务,no-resolve" # 中国流量交由国内服务组
+  - "RULE-SET,cncidr,国内服务,no-resolve"
   - "GEOSITE,CN,国内服务"
   - "GEOIP,CN,国内服务,no-resolve"
   - "RULE-SET,proxy,节点选择"
