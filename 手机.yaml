@@ -1,0 +1,311 @@
+# =========================================================
+# 防 DNS 泄露、Fake-IP 秒开、内存极低、应用分流
+# =========================================================
+
+# --- 1. 全局基础设置 ---
+bind-address: "0.0.0.0"         # 绑定 IP：0.0.0.0 表示监听电脑上的所有网卡
+mixed-port: 7890                # 混合代理端口：HTTP 和 SOCKS5 代理共用这一个本地端口
+unified-delay: true             # 统一延迟：测速时把 TCP 真实握手的时间也算进去，选出来的节点更准、更真实
+find-process-mode: strict       # 进程识别模式：严格。让内核精准识别是电脑里哪个软件发出的网络请求
+global-client-fingerprint: random # 客户端指纹伪装：随机生成 TLS 指纹。每次请求特征都不一样，极大增强防墙和防封锁能力
+tcp-concurrent: true            # TCP 并发：允许同时发起多个 TCP 连接，能显著提升包含大量图片的网页打开速度
+keep-alive-idle: 600            # TCP 保持空闲时间：连接闲置 600 秒后才断开，减少频繁重新握手的开销
+keep-alive-interval: 15         # TCP 探测间隔：每 15 秒发个小包确认连接是否还活着（防断流）
+
+# --- 2. 缓存与持久化 ---
+profile:
+  store-selected: true          # 记忆节点选择：重启电脑/软件后依然保留你手动选的节点，不用每次重选
+  store-fake-ip: true           # 记忆假 IP：重启后，之前分配的假 IP 依然有效，防止重启瞬间旧网页断开连不上
+
+lan-allowed-ips:                # 局域网访问白名单（哪怕日常不开局域网共享，保留这个也是最安全的默认防护）
+  - 0.0.0.0/0
+  - ::/0
+  - 127.0.0.1/8
+
+# --- 3. TUN 虚拟网卡设置 (在软件界面点开关即可，这里保留最优接管参数) ---
+tun:
+  stack: mixed                  # 网络栈：混合模式。TCP 流量用 system（性能最好），UDP 流量用 gvisor（兼容性最好，防游戏报错）
+  strict-route: true            # 严格路由：强行修改系统默认路由，防止任何真实的本地 IP 和 DNS 漏网
+  dns-hijack: ["any:53", "tcp://any:53"] # DNS 劫持：把发往 53 端口的标准 DNS 请求全部半路拦截，交给内核处理
+  mtu: 1500                     # 最大传输单元：1500 是最标准的以太网数值
+  auto-route: true              # 自动设置系统路由表
+  auto-redirect: false          # 自动重定向：TUN 模式下无需开启
+  auto-detect-interface: true   # 自动识别出口网卡
+
+# --- 4. 核心 DNS 防污染设置 (极致秒开与防泄露) ---
+dns:
+  enable: true                  # 开启内置 DNS 引擎
+  cache-algorithm: arc          # 缓存算法：ARC（比传统的 LRU 算法更聪明，命中率更高，查过的域名下次瞬间出结果）
+  listen: 0.0.0.0:1053          # 本地 DNS 监听端口
+  respect-rules: true           # 遵守规则：让 DNS 解析严格听从最下方 `rules` 分流规则的指挥
+  use-hosts: true               # 查询 hosts 文件
+  use-system-hosts: true        # 查询电脑系统的 hosts 文件
+  enhanced-mode: fake-ip        # 增强模式：虚拟 IP (Fake-IP)。【防漏最强武器】不查真实 IP，直接瞬间给假 IP 骗浏览器建立连接，真实解析由远端代劳
+  fake-ip-range: 198.18.0.1/16  # 假 IP 的分配池（内网保留地址，绝对不会和真实公网 IP 冲突）
+  fake-ip-filter-mode: blacklist # 假 IP 黑名单模式：除了下面名单里的，其他全部给假 IP
+  fake-ip-filter:               
+    - rule-set:fakeipfilter     # 引用外部假 IP 过滤列表（包含时间同步、迅雷等，给假 IP 会报错的特殊域名，强制给真 IP）
+  
+  # 【引导 DNS】：仅用于第一步！当代理要连 `doh.pub` 等加密网址时，先用纯 IP 去问它们俩要真实地址，防死循环
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  
+  # 【默认 DNS (境外)】：负责查询所有“境外域名”和“没写进规则的域名”，填境外加密 DNS，彻底防污染
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  
+  # 【节点 DNS】：专门用来解析你订阅节点自身的服务器域名，用国内 DNS 查最快，加速握手
+  proxy-server-nameserver:
+    - https://223.5.5.5/dns-query
+    - https://doh.pub/dns-query
+  
+  # 【覆盖策略 (无回退分流核心)】：只要是国内域名或局域网，一律只问阿里/腾讯。彻底抛弃 Fallback 备胎机制，拒绝等待，国内网页秒开
+  nameserver-policy:
+    "geosite:cn,private":
+      - https://223.5.5.5/dns-query
+      - https://doh.pub/dns-query
+
+# --- 5. 域名嗅探器 (专治不服与流氓软件) ---
+sniffer:
+  enable: true                  # 开启嗅探
+  parse-pure-ip: true           # 强制分析纯 IP 请求：有些软件直接用 IP 连服务器，内核能把它原本的域名“扒”出来去分流
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true # 强行覆盖：用嗅探出来的域名替换原来的冷冰冰的 IP
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]        # 嗅探 QUIC 协议：YouTube/Google 大量使用 UDP 协议，嗅探它能让视频分流更准
+  skip-domain:
+    - "Mijia Cloud"             # 嗅探白名单：跳过米家智能家居，防止台灯/扫地机掉线
+    - "+.push.apple.com"        # 嗅探白名单：跳过苹果推送，防止收不到微信通知
+  skip-src-address:
+    - 192.168.1.0/24            # 跳过局域网来源：家里设备互相传文件时不嗅探，节约 CPU
+  skip-dst-address:
+    # ⚠️ 极度重要：Telegram 官方直连 IP 段。TG 经常直接用这些 IP 发起特殊协议连接。跳过它们能防止内核误判，彻底解决 TG 转圈连不上的问题
+    - 91.105.192.0/23
+    - 91.108.4.0/22
+    - 91.108.8.0/21
+    - 91.108.16.0/21
+    - 91.108.56.0/22
+    - 95.161.64.0/20
+    - 149.154.160.0/20
+    - 185.76.151.0/24
+
+# --- 6. 内置基础节点 ---
+proxies:
+  - {name: DIRECT, type: direct}  # 内置直连节点
+  - {name: REJECT, type: reject}  # 内置拦截黑洞，发送到这里的流量全部丢弃
+
+# --- 7. 节点地区筛选 (结合你专属的越南正则) ---
+FilterHK: &FilterHK '(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$'
+FilterTW: &FilterTW '(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$'
+FilterSG: &FilterSG '(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$'
+FilterUS: &FilterUS '(?=.*(广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$'
+FilterVN: &FilterVN '(?=.*(越|越南|VN|vn|vietnam|胡|河内)).*$'
+FilterOther: &FilterOther '^(?!.*(官网|套餐|流量|异常|剩余|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States|越|越南|VN|vn|vietnam|胡|河内)).*$'
+
+# --- 8. 策略组基础行为模板 ---
+# 手动选择 (select)：包含所有节点，想用哪个自己点，在界面绝对可见
+Select: &Select {type: select, url: 'https://www.google.com/generate_204', disable-udp: false, hidden: false, include-all: true}
+# 自动测速 (url-test)：每隔 120 秒测速，谁延迟最低切给谁（容差 200ms 内不瞎切，防掉线），默认在界面隐藏
+UrlTest: &UrlTest {type: url-test, url: 'https://www.google.com/generate_204', disable-udp: false, hidden: true, include-all: true, interval: 120, lazy: true, tolerance: 200, timeout: 2000, max-failed-times: 3}
+
+# --- 9. 策略组通用名单定义 (相当于变量，方便统一修改) ---
+commonProxies: &commonProxies [ 🚀 节点选择, 香港节点, 香港-自动, 台湾节点, 台湾-自动, 新加坡节点, 新加坡-自动, 美国节点, 美国-自动, 越南节点, 越南-自动, 其他节点, 🔗 全局直连 ]
+bilibiliProxies: &bilibiliProxies [ 🔗 全局直连, 🚀 节点选择, 台湾节点, 香港节点, 台湾-自动, 香港-自动, 其他节点 ]
+nodeSelectProxies: &nodeSelectProxies [ 香港节点, 香港-自动, 台湾节点, 台湾-自动, 新加坡节点, 新加坡-自动, 美国节点, 美国-自动, 越南节点, 越南-自动, 其他节点, 🔗 全局直连 ]
+
+# --- 10. 面板策略组全复刻 (保留 JS 里的精美图标与分组结构) ---
+proxy-groups:
+  # 主干选择组
+  - {name: 🚀 节点选择, type: select, proxies: *nodeSelectProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg"}
+  
+  # 专属业务分流组
+  - {name: 🇻🇳 越南服务, type: select, proxies: *commonProxies, icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/330px-Flag_of_Vietnam.svg.png"}
+  - {name: 🔍 谷歌服务, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg"}
+  - {name: ▶️ YouTube, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg"}
+  - {name: 📲 电报消息, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg"}
+  - {name: 🤖 AI, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg"}
+  - {name: 🎵 TikTok, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/tiktok.svg"}
+  - {name: Ⓜ️ 微软服务, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg"}
+  - {name: 🍎 苹果服务, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg"}
+  - {name: 📺 哔哩哔哩港澳台, type: select, proxies: *bilibiliProxies, icon: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/icon/bilibili.svg"}
+  - {name: 🐟 漏网之鱼, type: select, proxies: *commonProxies, icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg"}
+  
+  # 系统级基础组
+  - {name: 🛡️ 广告过滤, type: select, proxies: [REJECT, DIRECT], icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg"}
+  - {name: 🔗 全局直连, type: select, proxies: [DIRECT], icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg"}
+
+  # 隐藏的地区逻辑组 (装填具体节点的盒子)
+  - {name: 香港节点, <<: *Select, filter: *FilterHK}
+  - {name: 台湾节点, <<: *Select, filter: *FilterTW}
+  - {name: 新加坡节点, <<: *Select, filter: *FilterSG}
+  - {name: 美国节点, <<: *Select, filter: *FilterUS}
+  - {name: 越南节点, <<: *Select, filter: *FilterVN}
+  - {name: 其他节点, <<: *Select, filter: *FilterOther}
+
+  # 隐藏的地区测速组 (后台默默选最快)
+  - {name: 香港-自动, <<: *UrlTest, filter: *FilterHK}
+  - {name: 台湾-自动, <<: *UrlTest, filter: *FilterTW}
+  - {name: 新加坡-自动, <<: *UrlTest, filter: *FilterSG}
+  - {name: 美国-自动, <<: *UrlTest, filter: *FilterUS}
+  - {name: 越南-自动, <<: *UrlTest, filter: *FilterVN}
+
+# --- 11. 最优路由规则 (网络交警：从上到下严格匹配，命中了就放行) ---
+rules:
+  # 【第一层：黑洞拦截】垃圾探测流量直接扔进垃圾桶，节约电脑资源
+  - IP-CIDR,169.254.169.254/32,REJECT,no-resolve  
+  - DST-PORT,11434,REJECT                         
+  - DOMAIN,t-ring-fdv2.msedge.net,REJECT,no-resolve 
+  - RULE-SET,reject,🛡️ 广告过滤                   # 引入去广告模块
+  
+  # 【第二层：系统 DNS 放行】查国内域名的请求直接出海关
+  - IP-CIDR,223.5.5.5/32,🔗 全局直连,no-resolve
+  - IP-CIDR,223.6.6.6/32,🔗 全局直连,no-resolve
+  
+  # 【第三层：局域网放行】路由器、NAS、打印机等本地设备直连
+  # ⚠️ 性能秘籍：后缀加了 `no-resolve` 表示遇到 IP 规则不要费时间去反查域名，直接判断 IP 就行，能大幅提升速度
+  - RULE-SET,private_ip,🔗 全局直连,no-resolve           
+  - RULE-SET,private_domain,🔗 全局直连
+  
+  # 【第四层：高频与大流量直连】测速网站和苹果服务(AppStore下载)直连跑满宽带
+  - RULE-SET,speedtest_domain,🔗 全局直连                
+  - RULE-SET,apple_domain,🍎 苹果服务                    
+  - RULE-SET,apple_ip,🍎 苹果服务,no-resolve
+  
+  # 【第五层：JS 核心移植 - 越南专区与精细化直连】
+  - DOMAIN-SUFFIX,vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,zalo.me,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,zalo,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,shopee.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,lazada.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,zing.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,vng.com.vn,🇻🇳 越南服务
+  - DOMAIN-SUFFIX,tiktok.com.vn,🇻🇳 越南服务
+  - DOMAIN-KEYWORD,jspoo,🔗 全局直连
+  - DOMAIN,v2rayse.com,🚀 节点选择
+
+  # 【第六层：精细化国外代理应用分流】匹配上哪个应用，就把它引导到对应的策略组里去
+  - RULE-SET,BilibiliHMT,📺 哔哩哔哩港澳台
+  - RULE-SET,TikTok,🎵 TikTok
+  - RULE-SET,ai_domain,🤖 AI
+  - RULE-SET,onedrive_domain,Ⓜ️ 微软服务
+  - RULE-SET,microsoft_domain,Ⓜ️ 微软服务
+  - RULE-SET,telegram_ip,📲 电报消息,no-resolve
+  - RULE-SET,telegram_domain,📲 电报消息
+  - RULE-SET,youtube_domain,▶️ YouTube
+  - RULE-SET,google_domain,🔍 谷歌服务
+  - RULE-SET,google_ip,🔍 谷歌服务,no-resolve
+  
+  # 【第七层：国内全量规则兜底】只要匹配上是中国国内的网站或 IP，一律走直连
+  - RULE-SET,cn_domain,🔗 全局直连
+  - RULE-SET,cn_ip,🔗 全局直连,no-resolve
+  
+  # 【第八层：绝对兜底】上面七层都没匹配到的流量
+  - RULE-SET,geolocation-!cn_domain,🚀 节点选择   # 如果属于国外网站库，交给代理
+  - MATCH,🐟 漏网之鱼                             # 最后未知的“黑户”流量，丢给漏网之鱼组
+
+# --- 12. 规则集定义与拉取 (高性能组合版) ---
+# 格式模板定义
+RuleSet_domain_yaml: &RuleSet_domain_yaml {type: http, behavior: domain, interval: 43200, format: yaml}
+RuleSet_classical_yaml: &RuleSet_classical_yaml {type: http, behavior: classical, interval: 43200, format: yaml}
+RuleSet_domain_mrs: &RuleSet_domain_mrs {type: http, behavior: domain, interval: 43200, format: mrs} # MRS 是极速二进制格式
+RuleSet_ipcidr_mrs: &RuleSet_ipcidr_mrs {type: http, behavior: ipcidr, interval: 43200, format: mrs}
+
+rule-providers:
+  # ==========================================================
+  # 补充 1：引入原 JS 配置中的特定应用文本规则
+  # ==========================================================
+  reject:
+    <<: *RuleSet_domain_yaml
+    url: "https://fastly.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: "./rule-providers/reject.yaml"
+  BilibiliHMT:
+    <<: *RuleSet_classical_yaml
+    url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/BilibiliHMT.txt"
+    path: "./rule-providers/BilibiliHMT.yaml"
+  TikTok:
+    <<: *RuleSet_classical_yaml
+    url: "https://fastly.jsdelivr.net/gh/xiaolin-007/clash@main/rule/TikTok.txt"
+    path: "./rule-providers/TikTok.yaml"
+  
+  # ==========================================================
+  # 补充 2：Fake-IP 必须的放行黑名单库
+  # ==========================================================
+  fakeipfilter:
+    <<: *RuleSet_domain_yaml
+    url: "https://raw.githubusercontent.com/juewuy/ShellCrash/refs/heads/dev/public/fake_ip_filter.list"
+    path: ./rule-providers/fakeipfilter.list
+
+  # ==========================================================
+  # 核心提升：放弃臃肿文本，全面采用 MetaCubeX .mrs 极速二进制规则
+  # 大幅降低内存占用，提升软件启动和匹配速度 (每 12 小时静默更新)
+  # ==========================================================
+  private_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+    path: ./rule-providers/private_domain.mrs
+  ai_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"
+    path: ./rule-providers/ai_domain.mrs
+  youtube_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"
+    path: ./rule-providers/youtube_domain.mrs
+  google_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"
+    path: ./rule-providers/google_domain.mrs
+  telegram_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"
+    path: ./rule-providers/telegram_domain.mrs
+  onedrive_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"
+    path: ./rule-providers/onedrive_domain.mrs
+  microsoft_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"
+    path: ./rule-providers/microsoft_domain.mrs
+  apple_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"
+    path: ./rule-providers/apple_domain.mrs
+  speedtest_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"
+    path: ./rule-providers/speedtest_domain.mrs
+  geolocation-!cn_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
+    path: ./rule-providers/geolocation-!cn_domain.mrs
+  cn_domain:
+    <<: *RuleSet_domain_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+    path: ./rule-providers/cn_domain.mrs
+  private_ip:
+    <<: *RuleSet_ipcidr_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+    path: ./rule-providers/private_ip.mrs
+  cn_ip:
+    <<: *RuleSet_ipcidr_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
+    path: ./rule-providers/cn_ip.mrs
+  google_ip:
+    <<: *RuleSet_ipcidr_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"
+    path: ./rule-providers/google_ip.mrs
+  apple_ip:
+    <<: *RuleSet_ipcidr_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"
+    path: ./rule-providers/apple_ip.mrs
+  telegram_ip:
+    <<: *RuleSet_ipcidr_mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/telegram.mrs"
+    path: ./rule-providers/telegram_ip.mrs
