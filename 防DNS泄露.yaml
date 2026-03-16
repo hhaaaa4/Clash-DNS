@@ -125,12 +125,12 @@ proxy-groups:
   # --- 3. 地区分流出口 (专职服务，不混入应用组) ---
   - name: 越南服务
     type: select
-    proxies: [DIRECT, 越南-自动, 越南节点, 新加坡-自动, 新加坡节点]
+    proxies: [DIRECT, 越南-自动, 越南节点, 新加坡-自动, 新加坡节点, 节点选择]
     icon: "https://flagcdn.com/w320/vn.png" 
 
   - name: 国内服务
     type: select
-    proxies: [DIRECT, 中国-自动, 中国节点]
+    proxies: [DIRECT, 中国-自动, 中国节点, 节点选择]
     icon: "https://flagcdn.com/w320/cn.png" 
 
   # --- 4. 所有的应用分流组 (严格执行：全地区覆盖 + DIRECT) ---
