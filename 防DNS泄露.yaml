@@ -544,6 +544,7 @@ rules:
   - "RULE-SET,cncidr,国内服务,no-resolve"
   - "GEOSITE,CN,国内服务"
   - "GEOIP,CN,国内服务,no-resolve"
+  - "DOMAIN-KEYWORD,midea,DIRECT"
   
   # --- 全局兜底规则 (漏网之鱼处理) ---
   - "RULE-SET,proxy,节点选择"
