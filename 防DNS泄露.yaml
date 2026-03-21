@@ -546,6 +546,7 @@ rules:
   - "GEOSITE,CN,国内服务"
   - "GEOIP,CN,国内服务,no-resolve"
   - "DOMAIN-KEYWORD,midea,DIRECT"
+  - "DOMAIN-SUFFIX,yhglobal.com,国内服务"
   
   # --- 全局兜底规则 (漏网之鱼处理) ---
   - "RULE-SET,proxy,节点选择"
