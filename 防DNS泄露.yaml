@@ -541,6 +541,7 @@ rules:
   - "RULE-SET,telegramcidr,电报消息,no-resolve"
   
   # --- 国内服务直连 ---
+  - "PROCESS-NAME,Weixin.exe,国内服务"
   - "RULE-SET,cncidr,国内服务,no-resolve"
   - "GEOSITE,CN,国内服务"
   - "GEOIP,CN,国内服务,no-resolve"
